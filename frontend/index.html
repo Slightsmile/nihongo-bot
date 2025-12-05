@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NihongoBot - Japanese Learning Assistant</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🗾</span>
+                    <span class="logo-text">NihongoBot</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-content">
+                <button class="new-chat-btn" id="newChatBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    New Chat
+                </button>
+                
+                <div class="chat-history" id="chatHistory">
+                    <!-- Chat history items will be added here -->
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <span class="user-name">User</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <div class="chat-container">
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Welcome Screen -->
+                    <div class="welcome-screen" id="welcomeScreen">
+                        <div class="welcome-content">
+                            <h1 class="welcome-title">
+                                <span class="gradient-text">NihongoBot</span>
+                            </h1>
+                            <p class="welcome-subtitle">Your modern Japanese learning assistant</p>
+                            
+                            <div class="feature-cards">
+                                <div class="feature-card">
+                                    <div class="feature-icon">🌏</div>
+                                    <h3>Multilingual</h3>
+                                    <p>English, Japanese, Bengali</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">📚</div>
+                                    <h3>JLPT Ready</h3>
+                                    <p>N5 to N2 support</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">✨</div>
+                                    <h3>Smart Help</h3>
+                                    <p>Grammar, translation, examples</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🎯</div>
+                                    <h3>Interactive</h3>
+                                    <p>Practice and learn naturally</p>
+                                </div>
+                            </div>
+
+                            <div class="example-prompts">
+                                <p class="prompts-title">Try asking:</p>
+                                <div class="prompt-chips">
+                                    <button class="prompt-chip">Translate "Hello" to Japanese</button>
+                                    <button class="prompt-chip">Explain は vs が particles</button>
+                                    <button class="prompt-chip">JLPT N5 practice questions</button>
+                                    <button class="prompt-chip">How do I say "thank you" politely?</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="messageInput" 
+                            class="message-input" 
+                            placeholder="Ask me anything about Japanese..."
+                            rows="1"
+                        ></textarea>
+                        <button id="sendBtn" class="send-btn" disabled>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="input-hint">NihongoBot can make mistakes. Verify important information.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
