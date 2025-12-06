@@ -1,13 +1,11 @@
 from pydantic_settings import BaseSettings
 from typing import List
-import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = os.getenv(
-        "DATABASE_URL",
-        "postgresql://nihongo_user:nihongo_pass@localhost:5432/nihongobot"
-    )
+    DATABASE_URL: str = "postgresql://nihongo_user:nihongo_pass@localhost:5432/nihongobot"
     
     # CORS
     CORS_ORIGINS: List[str] = [
@@ -20,10 +18,7 @@ class Settings(BaseSettings):
     ]
     
     # Model Configuration
-    MODEL_PATH: str = os.getenv(
-        "MODEL_PATH",
-        "../model/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
-    )
+    MODEL_PATH: str = "../model/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
     MODEL_CONTEXT_SIZE: int = 4096
     MODEL_MAX_TOKENS: int = 2048
     MODEL_TEMPERATURE: float = 0.7
@@ -31,8 +26,8 @@ class Settings(BaseSettings):
     MODEL_TOP_K: int = 40
     
     # GPU/CPU Configuration
-    USE_GPU: bool = os.getenv("USE_GPU", "false").lower() == "true"
-    GPU_LAYERS: int = int(os.getenv("GPU_LAYERS", "0"))
+    USE_GPU: bool = False
+    GPU_LAYERS: int = 0
     
     class Config:
         env_file = ".env"

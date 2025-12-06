@@ -77,10 +77,31 @@ class ModelLoader:
         # Load new model
         logger.info(f"Loading model: {resolved_path}")
         
+        # Determine GPU layer offload based on settings and input
+        selected_gpu_layers = (
+            gpu_layers if gpu_layers is not None else (settings.GPU_LAYERS if settings.USE_GPU else 0)
+        )
+
+        # Log the device configuration intent
+        if selected_gpu_layers and selected_gpu_layers > 0:
+            logger.info(f"GPU requested: offloading {selected_gpu_layers} layers")
+            try:
+                import llama_cpp
+                gpu_supported = getattr(llama_cpp, "llama_supports_gpu_offload", lambda: None)()
+                logger.info(f"Backend GPU offload supported: {gpu_supported}")
+                if gpu_supported is False:
+                    logger.warning(
+                        "GPU offload not supported by current llama.cpp build. Falling back to CPU despite request."
+                    )
+            except Exception:
+                logger.warning("Could not verify llama.cpp GPU support at runtime.")
+        else:
+            logger.info("GPU disabled: running fully on CPU (n_gpu_layers=0)")
+
         self._model = Llama(
             model_path=resolved_path,
             n_ctx=context_size or settings.MODEL_CONTEXT_SIZE,
-            n_gpu_layers=gpu_layers if gpu_layers is not None else settings.GPU_LAYERS,
+            n_gpu_layers=selected_gpu_layers,
             verbose=False
         )
         
@@ -127,10 +148,18 @@ class ModelLoader:
     
     def get_current_model_info(self) -> dict:
         """Get information about the currently loaded model"""
+        # Infer device mode from configuration used at load time
+        try:
+            import llama_cpp
+            gpu_supported = getattr(llama_cpp, "llama_supports_gpu_offload", lambda: None)()
+        except Exception:
+            gpu_supported = None
+        device_mode = "gpu" if (settings.USE_GPU and (settings.GPU_LAYERS or 0) > 0 and gpu_supported) else "cpu"
         return {
             "model_path": self._current_model_path,
             "is_loaded": self._model is not None,
-            "context_size": settings.MODEL_CONTEXT_SIZE
+            "context_size": settings.MODEL_CONTEXT_SIZE,
+            "device": device_mode,
         }
     
     def list_available_models(self) -> list:

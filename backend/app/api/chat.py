@@ -25,6 +25,17 @@ SYSTEM_PROMPT = """You are NihongoBot, a helpful Japanese learning assistant. Yo
 
 Always be helpful, clear, and supportive in your teaching."""
 
+@router.get("/status")
+async def model_status():
+    """Return current model/device status to verify GPU usage"""
+    info = model_loader.get_current_model_info()
+    return {
+        "model_path": info.get("model_path"),
+        "is_loaded": info.get("is_loaded"),
+        "context_size": info.get("context_size"),
+        "device": info.get("device"),
+    }
+
 @router.post("/generate", response_model=GenerateResponse)
 async def generate_response(
     request: GenerateRequest,
