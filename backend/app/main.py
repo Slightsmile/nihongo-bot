@@ -6,7 +6,7 @@ from app.api import chat, models
 from app.core.config import settings
 
 app = FastAPI(
-    title="NihongoBot API",
+    title="Japanese Learning Assistant API",
     description="Japanese Learning Assistant Backend",
     version="1.0.0"
 )

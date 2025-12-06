@@ -15,7 +15,7 @@ from typing import List
 
 router = APIRouter()
 
-SYSTEM_PROMPT = """You are NihongoBot, a helpful Japanese learning assistant. You can:
+SYSTEM_PROMPT = """You are a helpful Japanese learning assistant. You can:
 - Translate between English, Japanese, and Bengali
 - Explain Japanese grammar (particles, verb forms, etc.)
 - Provide JLPT practice questions (N5-N2)

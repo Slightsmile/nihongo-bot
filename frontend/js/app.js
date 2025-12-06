@@ -23,6 +23,21 @@ class NihongoBot {
         this.messageInput.addEventListener('input', () => this.handleInput());
         this.messageInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
         this.newChatBtn.addEventListener('click', () => this.startNewChat());
+        // Knowledge Hub button (bottom of sidebar)
+        const knowledgeBtn = document.getElementById('knowledgeBtn');
+        if (knowledgeBtn) {
+            knowledgeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Placeholder action — open knowledge page or show modal
+                // Replace with app-specific navigation when available
+                try {
+                    // try to navigate if a route exists
+                    window.location.href = '/knowledge';
+                } catch (err) {
+                    alert('Knowledge Hub — coming soon');
+                }
+            });
+        }
         
         // Prompt chips
         document.querySelectorAll('.prompt-chip').forEach(chip => {
@@ -75,8 +90,7 @@ class NihongoBot {
             this.chats[this.currentChatId] = {
                 id: this.currentChatId,
                 title: message.substring(0, 30) + (message.length > 30 ? '...' : ''),
-                messages: [],
-                timestamp: Date.now()
+                messages: []
             };
         }
 
@@ -89,8 +103,7 @@ class NihongoBot {
         // Save message to chat
         this.chats[this.currentChatId].messages.push({
             role: 'user',
-            content: message,
-            timestamp: Date.now()
+            content: message
         });
 
         // Show typing indicator
@@ -105,8 +118,7 @@ class NihongoBot {
             // Save bot response
             this.chats[this.currentChatId].messages.push({
                 role: 'bot',
-                content: response,
-                timestamp: Date.now()
+                content: response
             });
 
             this.saveChats();
@@ -123,7 +135,7 @@ class NihongoBot {
         
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
-        avatar.textContent = role === 'user' ? 'Y' : '🗾';
+        avatar.textContent = role === 'user' ? '' : '🗾';
         
         const contentWrapper = document.createElement('div');
         contentWrapper.className = 'message-content';
@@ -133,14 +145,10 @@ class NihongoBot {
         
         const name = document.createElement('span');
         name.className = 'message-name';
-        name.textContent = role === 'user' ? 'You' : 'NihongoBot';
+        name.textContent = '';
         
-        const time = document.createElement('span');
-        time.className = 'message-time';
-        time.textContent = this.getCurrentTime();
-        
+        // Only show the name (no time)
         header.appendChild(name);
-        header.appendChild(time);
         
         const text = document.createElement('div');
         text.className = 'message-text';
@@ -222,10 +230,7 @@ class NihongoBot {
         return formatted;
     }
 
-    getCurrentTime() {
-        const now = new Date();
-        return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    }
+    // Time display removed from UI; timestamps are not stored.
 
     scrollToBottom() {
         setTimeout(() => {
@@ -242,7 +247,7 @@ class NihongoBot {
             <div class="welcome-screen" id="welcomeScreen">
                 <div class="welcome-content">
                     <h1 class="welcome-title">
-                        <span class="gradient-text">NihongoBot</span>
+                        <span class="gradient-text">Welcome</span>
                     </h1>
                     <p class="welcome-subtitle">Your modern Japanese learning assistant</p>
                     
@@ -298,7 +303,7 @@ class NihongoBot {
     }
 
     renderChatHistory() {
-        const sortedChats = Object.values(this.chats).sort((a, b) => b.timestamp - a.timestamp);
+        const sortedChats = Object.values(this.chats);
         
         this.chatHistory.innerHTML = sortedChats.map(chat => `
             <div class="chat-history-item ${chat.id === this.currentChatId ? 'active' : ''}" 
@@ -691,43 +696,43 @@ Want to learn a specific kanji? Just ask! 🎌`,
 
     getDefaultResponse(lang) {
         const responses = {
-            en: `Hello! I'm **NihongoBot**, your Japanese learning assistant. ✨
+            en: `Hello! I'm your Japanese learning assistant. ✨
 
-I can help you with:
+    I can help you with:
 
-📝 **Translation** (English/Bengali ↔ Japanese)
-📚 **Grammar explanations**
-🎯 **JLPT practice** (N5-N2)
-✍️ **Kanji breakdown**
-🗣️ **Pronunciation tips**
-🙇 **Politeness levels**
+    📝 **Translation** (English/Bengali ↔ Japanese)
+    📚 **Grammar explanations**
+    🎯 **JLPT practice** (N5-N2)
+    ✍️ **Kanji breakdown**
+    🗣️ **Pronunciation tips**
+    🙇 **Politeness levels**
 
-Try asking:
-• "Translate 'good morning' to Japanese"
-• "Explain the は particle"
-• "Give me N5 practice questions"
-• "How do I say 'thank you' politely?"
+    Try asking:
+    • "Translate 'good morning' to Japanese"
+    • "Explain the は particle"
+    • "Give me N5 practice questions"
+    • "How do I say 'thank you' politely?"
 
-What would you like to learn today?`,
-            ja: `こんにちは！**NihongoBot**です。✨
+    What would you like to learn today?`,
+            ja: `こんにちは！日本語学習アシスタントです。✨
 
-お手伝いできること:
+    お手伝いできること:
 
-📝 翻訳
-📚 文法説明
-🎯 JLPT練習
+    📝 翻訳
+    📚 文法説明
+    🎯 JLPT練習
 
-何を学びたいですか？`,
-            bn: `হ্যালো! আমি **NihongoBot**, আপনার জাপানিজ শেখার সহায়ক। ✨
+    何を学びたいですか？`,
+            bn: `হ্যালো! আমি আপনার জাপানিজ শেখার সহায়ক। ✨
 
-আমি সাহায্য করতে পারি:
+    আমি সাহায্য করতে পারি:
 
-📝 **অনুবাদ** (ইংরেজি/বাংলা ↔ জাপানিজ)
-📚 **ব্যাকরণ ব্যাখ্যা**
-🎯 **JLPT অনুশীলন** (N5-N2)
-✍️ **কাঞ্জি বিশ্লেষণ**
+    📝 **অনুবাদ** (ইংরেজি/বাংলা ↔ জাপানিজ)
+    📚 **ব্যাকরণ ব্যাখ্যা**
+    🎯 **JLPT অনুশীলন** (N5-N2)
+    ✍️ **কাঞ্জি বিশ্লেষণ**
 
-আজ আপনি কী শিখতে চান?`
+    আজ আপনি কী শিখতে চান?`
         };
 
         return responses[lang] || responses.en;

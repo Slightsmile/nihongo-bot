@@ -185,6 +185,42 @@ body {
     font-size: 0.875rem;
 }
 
+/* Knowledge Hub Button (placed next to avatar) */
+.knowledge-btn {
+    /* Text button sized to avatar height and aligned */
+    height: 36px;
+    min-width: 36px;
+    padding: 0 12px;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-light);
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.knowledge-btn:hover {
+    background: linear-gradient(135deg, rgba(102,124,234,0.06) 0%, rgba(118,75,162,0.06) 100%);
+    border-color: var(--accent-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(99,102,241,0.06);
+}
+
+@media (max-width: 480px) {
+    .knowledge-btn {
+        height: 34px;
+        padding: 0 10px;
+        font-size: 0.75rem;
+    }
+}
+
 /* Main Content */
 .main-content {
     flex: 1;
@@ -201,6 +237,7 @@ body {
     width: 100%;
     margin: 0 auto;
     position: relative;
+    min-height: 0; /* allow children to scroll inside flex */
 }
 
 .messages-container {
@@ -208,28 +245,19 @@ body {
     overflow-y: auto;
     padding: var(--spacing-xl);
     scroll-behavior: smooth;
+    min-height: 0; /* ensure scroll in nested flex */
 }
 
-/* Custom Scrollbar */
+/* Hide Scrollbar (remove visible slider while scrolling) */
+.messages-container,
+.sidebar-content {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ and Edge */
+}
+
 .messages-container::-webkit-scrollbar,
 .sidebar-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.messages-container::-webkit-scrollbar-track,
-.sidebar-content::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.messages-container::-webkit-scrollbar-thumb,
-.sidebar-content::-webkit-scrollbar-thumb {
-    background: var(--bg-tertiary);
-    border-radius: 4px;
-}
-
-.messages-container::-webkit-scrollbar-thumb:hover,
-.sidebar-content::-webkit-scrollbar-thumb:hover {
-    background: var(--bg-hover);
+    display: none; /* Chrome, Safari and Opera */
 }
 
 /* Welcome Screen */
@@ -343,6 +371,11 @@ body {
     animation: fadeIn 0.3s ease;
 }
 
+/* Place user avatar on the right side */
+.message.user {
+    flex-direction: row-reverse;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -380,22 +413,36 @@ body {
     max-width: 100%;
 }
 
+.message.user .message-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+}
+
 .message-header {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
     margin-bottom: var(--spacing-xs);
+}
+
+.message.user .message-header {
+    justify-content: flex-end;
+    text-align: right;
 }
 
 .message-name {
     font-weight: 600;
     font-size: 0.875rem;
+    margin-right: var(--spacing-xs);
 }
 
-.message-time {
-    font-size: 0.75rem;
-    color: var(--text-tertiary);
+.message.user .message-name {
+    margin-right: 0;
+    margin-left: var(--spacing-xs);
 }
+
 
 .message-text {
     font-size: 0.9375rem;
@@ -484,6 +531,9 @@ body {
     padding: var(--spacing-lg) var(--spacing-xl);
     background-color: var(--bg-primary);
     border-top: 1px solid var(--border-color);
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
 }
 
 .input-wrapper {

@@ -56,7 +56,6 @@ frontend/
 - Real-time messaging
 - Typing indicators
 - Auto-scroll to latest message
-- Message timestamps
 - Markdown-style formatting
 
 ### Learning Features
