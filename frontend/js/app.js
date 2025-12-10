@@ -21,6 +21,9 @@ class NihongoBot {
     }
 
     init() {
+        // Theme Toggle
+        this.initTheme();
+        
         // Event Listeners
         this.sendBtn.addEventListener('click', () => this.sendMessage());
         this.messageInput.addEventListener('input', () => this.handleInput());
@@ -695,6 +698,25 @@ Want to learn a specific kanji? Just ask! 🎌`,
         };
 
         return responses[lang] || responses.en;
+    }
+    
+    // Theme Management
+    initTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => this.toggleTheme());
+        }
+    }
+    
+    toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
     }
 
     getDefaultResponse(lang) {
