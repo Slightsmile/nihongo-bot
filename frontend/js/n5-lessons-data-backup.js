@@ -1,276 +1,175 @@
-// N5 Course Module - Complete Hiragana & Katakana Charts! 🎌
-// ALL characters displayed with pronunciation guides
+// N5 Course Module - Enhanced MEGA VERSION for Absolute Beginners! 🎌
+// Combining: Minna no Nihongo I + Genki I + Japanese From Zero + Fun Interactive Content
+// Updated: December 2025
 
 const N5_LESSONS = [
-    // 📝 WRITING SYSTEM - Complete Charts
+    // 📝 WRITING SYSTEM - Learn to Read & Write First!
     {
         id: -5,
-        title: "Complete Hiragana Chart",
-        emoji: "✍️",
-        description: "ALL 46 basic hiragana characters with pronunciation guides!",
-        topics: "Complete hiragana writing system - every character you need to know",
+        title: "✍️ Hiragana Part 1: Vowels & K-Row",
+        topics: "あいうえお, かきくけこ",
         difficulty: "absolute-beginner",
-        estimatedTime: "60 minutes",
+        estimatedTime: "20 mins",
         grammar: [
-            "VOWELS: あ(a) い(i) う(u) え(e) お(o)",
-            "K-ROW: か(ka) き(ki) く(ku) け(ke) こ(ko)",
-            "S-ROW: さ(sa) し(shi) す(su) せ(se) そ(so)",
-            "T-ROW: た(ta) ち(chi) つ(tsu) て(te) と(to)",
-            "N-ROW: な(na) に(ni) ぬ(nu) ね(ne) の(no)",
-            "H-ROW: は(ha) ひ(hi) ふ(fu) へ(he) ほ(ho)",
-            "M-ROW: ま(ma) み(mi) む(mu) め(me) も(mo)",
-            "Y-ROW: や(ya) ゆ(yu) よ(yo)",
-            "R-ROW: ら(ra) り(ri) る(ru) れ(re) ろ(ro)",
-            "W-ROW: わ(wa) を(wo) ん(n)"
+            "あ (a) - like 'ah' in father",
+            "い (i) - like 'ee' in feet",
+            "う (u) - like 'oo' in food",
+            "え (e) - like 'eh' in bed",
+            "お (o) - like 'oh' in open"
         ],
         vocabulary: [
             "あ (a)", "い (i)", "う (u)", "え (e)", "お (o)",
-            "か (ka)", "き (ki)", "く (ku)", "け (ke)", "こ (ko)",
+            "か (ka)", "き (ki)", "く (ku)", "け (ke)", "こ (ko)"
+        ],
+        description: "Master the first 10 hiragana! These are the building blocks of ALL Japanese writing. With pronunciation guides!",
+        funFact: "✍️ Hiragana was originally called 'onnade' (女手) - women's writing! It was considered too simple for men in ancient times.",
+        quickTips: [
+            "🎵 Sing the vowels: A-I-U-E-O (ah-ee-oo-eh-oh)",
+            "✏️ Write each character 10 times to memorize",
+            "👄 Exaggerate pronunciation at first",
+            "🔄 K-row: Just add 'K' sound before each vowel!"
+        ],
+        practicePrompts: [
+            "Quiz me on the vowels (あいうえお)",
+            "Show me how to write か (ka)",
+            "Give me words using these characters",
+            "Create a memory trick for the K-row",
+            "Practice reading: あお (ao - blue), いけ (ike - pond), かき (kaki - persimmon)"
+        ],
+        emoji: "✍️",
+        writingGuide: {
+            "あ": "Start top-right, curve left-down, horizontal stroke, then final curve",
+            "い": "Two simple strokes - vertical then shorter vertical",
+            "う": "Like a sideways 'c' with a small stroke on top",
+            "え": "Looks like a backwards 'c' with horizontal line",
+            "お": "Three strokes forming a character",
+            "か": "力 (power) with two extra strokes",
+            "き": "Three horizontal lines with one vertical",
+            "く": "Simple '<' shape",
+            "け": "Four strokes, open at bottom",
+            "こ": "Two horizontal strokes"
+        }
+    },
+    
+    {
+        id: -4,
+        title: "✍️ Hiragana Part 2: S, T, N Rows",
+        topics: "さしすせそ, たちつてと, なにぬねの",
+        difficulty: "absolute-beginner",
+        estimatedTime: "25 mins",
+        grammar: [
+            "S-row: sa, shi (not si!), su, se, so",
+            "T-row: ta, chi (not ti!), tsu, te, to",
+            "N-row: na, ni, nu, ne, no"
+        ],
+        vocabulary: [
             "さ (sa)", "し (shi)", "す (su)", "せ (se)", "そ (so)",
             "た (ta)", "ち (chi)", "つ (tsu)", "て (te)", "と (to)",
-            "な (na)", "に (ni)", "ぬ (nu)", "ね (ne)", "の (no)",
+            "な (na)", "に (ni)", "ぬ (nu)", "ね (ne)", "の (no)"
+        ],
+        description: "Learn 15 more hiragana! Watch out for し (shi) and ち (chi) - they're special!",
+        funFact: "🎯 つ (tsu) is the HARDEST sound for English speakers! Put your tongue behind your teeth and 'ts'.",
+        quickTips: [
+            "⚠️ し is 'shi' NOT 'si' - super important!",
+            "⚠️ ち is 'chi' NOT 'ti' - common mistake!",
+            "💡 た looks like a 'ta' (タ in katakana)",
+            "🎨 の looks like a tornado!"
+        ],
+        practicePrompts: [
+            "Quiz me on S, T, N rows",
+            "Why is し pronounced 'shi' not 'si'?",
+            "Give me practice words with つ (tsu)",
+            "How do I write た (ta) correctly?",
+            "Practice reading: すし (sushi), ちち (chichi - father), なつ (natsu - summer)"
+        ],
+        emoji: "✍️"
+    },
+    
+    {
+        id: -3,
+        title: "✍️ Hiragana Part 3: H, M, Y, R, W Rows",
+        topics: "はひふへほ, まみむめも, やゆよ, らりるれろ, わをん",
+        difficulty: "absolute-beginner",
+        estimatedTime: "30 mins",
+        grammar: [
+            "H-row: ha, hi, fu (not hu!), he, ho",
+            "M-row: ma, mi, mu, me, mo",
+            "Y-row: ya, (yi), yu, (ye), yo (only 3!)",
+            "R-row: ra, ri, ru, re, ro (sounds like 'la'!)",
+            "W-row: wa, (wi), (wu), (we), wo, n"
+        ],
+        vocabulary: [
             "は (ha)", "ひ (hi)", "ふ (fu)", "へ (he)", "ほ (ho)",
             "ま (ma)", "み (mi)", "む (mu)", "め (me)", "も (mo)",
             "や (ya)", "ゆ (yu)", "よ (yo)",
             "ら (ra)", "り (ri)", "る (ru)", "れ (re)", "ろ (ro)",
             "わ (wa)", "を (wo)", "ん (n)"
         ],
-        writingGuide: {
-            "あ": "a - like 'ah' in father",
-            "い": "i - like 'ee' in see",
-            "う": "u - like 'oo' in food",
-            "え": "e - like 'e' in bed",
-            "お": "o - like 'o' in or",
-            "か": "ka - like 'ca' in car",
-            "き": "ki - like 'key'",
-            "く": "ku - like 'coo' in cool",
-            "け": "ke - like 'ke' in ketchup",
-            "こ": "ko - like 'co' in cold",
-            "さ": "sa - like 'sa' in saw",
-            "し": "shi - like 'she' (NOT si!)",
-            "す": "su - like 'sue'",
-            "せ": "se - like 'se' in set",
-            "そ": "so - like 'so' in sold",
-            "た": "ta - like 'ta' in taco",
-            "ち": "chi - like 'chee' in cheese (NOT ti!)",
-            "つ": "tsu - like 'tsu' in tsunami (NOT tu!)",
-            "て": "te - like 'te' in ten",
-            "と": "to - like 'to' in toe",
-            "な": "na - like 'na' in nah",
-            "に": "ni - like 'knee'",
-            "ぬ": "nu - like 'new'",
-            "ね": "ne - like 'ne' in net",
-            "の": "no - like 'no'",
-            "は": "ha - like 'ha' in hat",
-            "ひ": "hi - like 'he'",
-            "ふ": "fu - like 'who' (NOT hu!)",
-            "へ": "he - like 'he' in hen",
-            "ほ": "ho - like 'ho' in hope",
-            "ま": "ma - like 'ma' in mom",
-            "み": "mi - like 'me'",
-            "む": "mu - like 'moo'",
-            "め": "me - like 'me' in met",
-            "も": "mo - like 'mo' in mow",
-            "や": "ya - like 'ya' in yacht",
-            "ゆ": "yu - like 'you'",
-            "よ": "yo - like 'yo' in yogurt",
-            "ら": "ra - like 'ra' (soft r, like 'la')",
-            "り": "ri - like 'ree' (soft r)",
-            "る": "ru - like 'roo' (soft r)",
-            "れ": "re - like 're' in red (soft r)",
-            "ろ": "ro - like 'ro' in row (soft r)",
-            "わ": "wa - like 'wa' in want",
-            "を": "wo - pronounced 'o' (particle only)",
-            "ん": "n - like 'n' in ink (nasal)"
-        },
-        funFact: "Hiragana was created over 1000 years ago by simplifying Chinese characters. Women originally used it!",
+        description: "Almost there! Learn the rest of hiragana including the tricky R-row.",
+        funFact: "🎌 ん (n) is the ONLY hiragana that can't start a word! It always comes in the middle or end.",
         quickTips: [
-            "✏️ Write each character 5-10 times to memorize",
-            "🎵 Learn row by row: vowels first, then K, S, T, etc.",
-            "👁️ Watch out: し=shi, ち=chi, つ=tsu, ふ=fu (special sounds!)",
-            "⚡ R-row sounds like soft L/R mix - tap tongue lightly"
+            "💡 ふ is 'fu' NOT 'hu' - blow air gently",
+            "🗣️ R-row sounds like a soft 'L' or 'D' - tongue touches roof!",
+            "⚡ を (wo) is ONLY used as particle, pronounced 'o'",
+            "🎵 や, ゆ, よ - only 3 in Y-row!"
         ],
         practicePrompts: [
-            "Show me how to write the vowels",
-            "Practice the K-row with me",
-            "What's the difference between し and ち?",
-            "Quiz me on random hiragana"
-        ]
+            "Why does R sound like L in Japanese?",
+            "Quiz me on all hiragana rows learned so far",
+            "How do I pronounce ん correctly?",
+            "Give me words with ふ (fu)",
+            "Practice reading: はな (hana - flower), やま (yama - mountain), らーめん (ramen)"
+        ],
+        emoji: "✍️"
     },
     
     {
-        id: -4,
-        title: "Hiragana with Dakuten (゛゜)",
-        emoji: "✍️",
-        description: "ALL modified hiragana with dakuten and handakuten marks!",
-        topics: "Dakuten marks change sounds: K→G, S→Z, T→D, H→B, H→P",
-        difficulty: "absolute-beginner",
-        estimatedTime: "45 minutes",
+        id: -2,
+        title: "✍️ Hiragana Part 4: Dakuten & Combos",
+        topics: "゛(dakuten), ゜(handakuten), きゃきゅきょ",
+        difficulty: "beginner",
+        estimatedTime: "30 mins",
         grammar: [
-            "G-ROW: が(ga) ぎ(gi) ぐ(gu) げ(ge) ご(go)",
-            "Z-ROW: ざ(za) じ(ji) ず(zu) ぜ(ze) ぞ(zo)",
-            "D-ROW: だ(da) ぢ(ji) づ(zu) で(de) ど(do)",
-            "B-ROW: ば(ba) び(bi) ぶ(bu) べ(be) ぼ(bo)",
-            "P-ROW: ぱ(pa) ぴ(pi) ぷ(pu) ぺ(pe) ぽ(po)"
+            "゛makes sounds voiced: か→が, さ→ざ, た→だ, は→ば",
+            "゜only for H-row: は→ぱ, ひ→ぴ, ふ→ぷ, へ→ぺ, ほ→ぽ",
+            "Combination characters: きゃ (kya), しゅ (shu), ちょ (cho)"
         ],
         vocabulary: [
             "が (ga)", "ぎ (gi)", "ぐ (gu)", "げ (ge)", "ご (go)",
             "ざ (za)", "じ (ji)", "ず (zu)", "ぜ (ze)", "ぞ (zo)",
             "だ (da)", "ぢ (ji)", "づ (zu)", "で (de)", "ど (do)",
             "ば (ba)", "び (bi)", "ぶ (bu)", "べ (be)", "ぼ (bo)",
-            "ぱ (pa)", "ぴ (pi)", "ぷ (pu)", "ぺ (pe)", "ぽ (po)"
+            "ぱ (pa)", "ぴ (pi)", "ぷ (pu)", "ぺ (pe)", "ぽ (po)",
+            "きゃ (kya)", "しゃ (sha)", "ちゃ (cha)", "にゃ (nya)", "みゃ (mya)"
         ],
-        writingGuide: {
-            "が": "ga - like 'ga' in garden",
-            "ぎ": "gi - like 'gi' in give",
-            "ぐ": "gu - like 'gu' in gum",
-            "げ": "ge - like 'ge' in get",
-            "ご": "go - like 'go'",
-            "ざ": "za - like 'za' in zebra",
-            "じ": "ji - like 'ji' in jeans",
-            "ず": "zu - like 'zoo'",
-            "ぜ": "ze - like 'ze' in zen",
-            "ぞ": "zo - like 'zo' in zone",
-            "だ": "da - like 'da' in dad",
-            "ぢ": "ji - same as じ (rarely used)",
-            "づ": "zu - same as ず (rarely used)",
-            "で": "de - like 'de' in desk",
-            "ど": "do - like 'do' in dog",
-            "ば": "ba - like 'ba' in ball",
-            "び": "bi - like 'bee'",
-            "ぶ": "bu - like 'boo'",
-            "べ": "be - like 'be' in bed",
-            "ぼ": "bo - like 'bo' in boat",
-            "ぱ": "pa - like 'pa' in park",
-            "ぴ": "pi - like 'pee'",
-            "ぷ": "pu - like 'poo'",
-            "ぺ": "pe - like 'pe' in pen",
-            "ぽ": "po - like 'po' in pop"
-        },
-        funFact: "Dakuten (゛) means 'muddy marks' - they make sounds more voiced! Circle marks (゜) are handakuten.",
+        description: "Level up! Learn voiced sounds and combination characters to read REAL Japanese!",
+        funFact: "🎮 ポケモン (Pokemon) uses these! ポ=po, ケ=ke, モ=mo. Now you can read it!",
         quickTips: [
-            "✏️ Dakuten (゛) adds voice: か→が, さ→ざ, た→だ, は→ば",
-            "⭕ Handakuten (゜) makes P sounds: は→ぱ only",
-            "⚠️ ぢ and づ are rarely used - use じ and ず instead",
-            "🎯 が is common for 'but' particle"
+            "🎤 ゛makes sound 'heavier' - vibrate your vocal cords",
+            "💥 ゜is like adding 'P' sound - ぱぴぷぺぽ",
+            "🌟 Combos are 2 sounds in 1: きゃ = ki + ya = kya",
+            "📝 Write small や, ゆ, よ for combos!"
         ],
         practicePrompts: [
-            "Show me all dakuten characters",
-            "What's the difference between じ and ぢ?",
-            "Practice writing: が、ざ、だ、ば、ぱ",
-            "Quiz me on dakuten sounds"
-        ]
+            "Explain dakuten marks with examples",
+            "Quiz me on combination characters",
+            "How do I write ちゃ (cha)?",
+            "Give me common words with voiced sounds",
+            "Practice reading: がっこう (gakkou - school), ぎゅうにゅう (gyuunyuu - milk), ちゃいろ (chairo - brown)"
+        ],
+        emoji: "✍️"
     },
     
     {
-        id: -3,
-        title: "Hiragana Combinations (Yōon)",
-        emoji: "✍️",
-        description: "ALL combination characters with small や、ゆ、よ!",
-        topics: "Combination sounds: きゃ、しゃ、ちゃ、にゃ, etc.",
-        difficulty: "absolute-beginner",
-        estimatedTime: "40 minutes",
-        grammar: [
-            "K-COMBOS: きゃ(kya) きゅ(kyu) きょ(kyo)",
-            "S-COMBOS: しゃ(sha) しゅ(shu) しょ(sho)",
-            "T-COMBOS: ちゃ(cha) ちゅ(chu) ちょ(cho)",
-            "N-COMBOS: にゃ(nya) にゅ(nyu) にょ(nyo)",
-            "H-COMBOS: ひゃ(hya) ひゅ(hyu) ひょ(hyo)",
-            "M-COMBOS: みゃ(mya) みゅ(myu) みょ(myo)",
-            "R-COMBOS: りゃ(rya) りゅ(ryu) りょ(ryo)",
-            "G-COMBOS: ぎゃ(gya) ぎゅ(gyu) ぎょ(gyo)",
-            "J-COMBOS: じゃ(ja) じゅ(ju) じょ(jo)",
-            "B-COMBOS: びゃ(bya) びゅ(byu) びょ(byo)",
-            "P-COMBOS: ぴゃ(pya) ぴゅ(pyu) ぴょ(pyo)"
-        ],
-        vocabulary: [
-            "きゃ (kya)", "きゅ (kyu)", "きょ (kyo)",
-            "しゃ (sha)", "しゅ (shu)", "しょ (sho)",
-            "ちゃ (cha)", "ちゅ (chu)", "ちょ (cho)",
-            "にゃ (nya)", "にゅ (nyu)", "にょ (nyo)",
-            "ひゃ (hya)", "ひゅ (hyu)", "ひょ (hyo)",
-            "みゃ (mya)", "みゅ (myu)", "みょ (myo)",
-            "りゃ (rya)", "りゅ (ryu)", "りょ (ryo)",
-            "ぎゃ (gya)", "ぎゅ (gyu)", "ぎょ (gyo)",
-            "じゃ (ja)", "じゅ (ju)", "じょ (jo)",
-            "びゃ (bya)", "びゅ (byu)", "びょ (byo)",
-            "ぴゃ (pya)", "ぴゅ (pyu)", "ぴょ (pyo)"
-        ],
-        writingGuide: {
-            "きゃ": "kya - like 'kya' in Tokyo",
-            "きゅ": "kyu - like 'queue'",
-            "きょ": "kyo - like 'kyo' in Kyoto",
-            "しゃ": "sha - like 'sha' in sharp",
-            "しゅ": "shu - like 'shoe'",
-            "しょ": "sho - like 'show'",
-            "ちゃ": "cha - like 'cha' in chart",
-            "ちゅ": "chu - like 'chew'",
-            "ちょ": "cho - like 'cho' in chocolate",
-            "にゃ": "nya - like 'nya' (cat sound)",
-            "にゅ": "nyu - like 'new'",
-            "にょ": "nyo - like 'nyo'",
-            "ひゃ": "hya - like 'hya' fast",
-            "ひゅ": "hyu - like 'hue'",
-            "ひょ": "hyo - like 'hyo'",
-            "みゃ": "mya - like 'mya'",
-            "みゅ": "myu - like 'mew'",
-            "みょ": "myo - like 'myo'",
-            "りゃ": "rya - like 'rya' (soft r)",
-            "りゅ": "ryu - like 'rew' (soft r)",
-            "りょ": "ryo - like 'ryo' (soft r)",
-            "ぎゃ": "gya - like 'gya'",
-            "ぎゅ": "gyu - like 'gyoo'",
-            "ぎょ": "gyo - like 'gyo'",
-            "じゃ": "ja - like 'ja' in jar",
-            "じゅ": "ju - like 'ju' in juice",
-            "じょ": "jo - like 'jo' in jog",
-            "びゃ": "bya - like 'bya'",
-            "びゅ": "byu - like 'bew'",
-            "びょ": "byo - like 'byo'",
-            "ぴゃ": "pya - like 'pya'",
-            "ぴゅ": "pyu - like 'pew'",
-            "ぴょ": "pyo - like 'pyo'"
-        },
-        commonWords: [
-            "しゃしん (shashin) - photograph",
-            "ちゃ (cha) - tea",
-            "りょこう (ryokou) - travel",
-            "びょういん (byouin) - hospital"
-        ],
-        funFact: "Small や、ゆ、よ combine with previous character into ONE syllable!",
-        quickTips: [
-            "✏️ Write や、ゆ、よ SMALLER to show combination",
-            "🎵 Common: しゃ(sha), ちゃ(cha), じゃ(ja)",
-            "⚠️ きゃ is 1 syllable (kya), not 2 (ki-ya)",
-            "🍵 ちゃ means tea!"
-        ],
-        practicePrompts: [
-            "Show me all sha/shu/sho combinations",
-            "What's the difference between きや and きゃ?",
-            "Practice: しゃ、ちゅ、りょ",
-            "Quiz me on combinations"
-        ]
-    },
-    
-    {
-        id: -2,
-        title: "Complete Katakana Chart",
-        emoji: "🔤",
-        description: "ALL 46 basic katakana characters for foreign words!",
-        topics: "Complete katakana writing system - angular script for loanwords",
+        id: -1,
+        title: "🔤 Katakana Complete Guide",
+        topics: "カタカナ for foreign words",
         difficulty: "beginner",
-        estimatedTime: "60 minutes",
+        estimatedTime: "35 mins",
         grammar: [
-            "VOWELS: ア(a) イ(i) ウ(u) エ(e) オ(o)",
-            "K-ROW: カ(ka) キ(ki) ク(ku) ケ(ke) コ(ko)",
-            "S-ROW: サ(sa) シ(shi) ス(su) セ(se) ソ(so)",
-            "T-ROW: タ(ta) チ(chi) ツ(tsu) テ(te) ト(to)",
-            "N-ROW: ナ(na) ニ(ni) ヌ(nu) ネ(ne) ノ(no)",
-            "H-ROW: ハ(ha) ヒ(hi) フ(fu) ヘ(he) ホ(ho)",
-            "M-ROW: マ(ma) ミ(mi) ム(mu) メ(me) モ(mo)",
-            "Y-ROW: ヤ(ya) ユ(yu) ヨ(yo)",
-            "R-ROW: ラ(ra) リ(ri) ル(ru) レ(re) ロ(ro)",
-            "W-ROW: ワ(wa) ヲ(wo) ン(n)"
+            "Katakana = Hiragana's angular cousin",
+            "Used for: Foreign words, onomatopoeia, emphasis",
+            "Same pronunciation as hiragana, different writing"
         ],
         vocabulary: [
             "ア (a)", "イ (i)", "ウ (u)", "エ (e)", "オ (o)",
@@ -284,152 +183,33 @@ const N5_LESSONS = [
             "ラ (ra)", "リ (ri)", "ル (ru)", "レ (re)", "ロ (ro)",
             "ワ (wa)", "ヲ (wo)", "ン (n)"
         ],
-        writingGuide: {
-            "ア": "a - like 'ah' in father",
-            "イ": "i - like 'ee' in see",
-            "ウ": "u - like 'oo' in food",
-            "エ": "e - like 'e' in bed",
-            "オ": "o - like 'o' in or",
-            "カ": "ka - like 'ca' in car",
-            "キ": "ki - like 'key'",
-            "ク": "ku - like 'coo' in cool",
-            "ケ": "ke - like 'ke' in ketchup",
-            "コ": "ko - like 'co' in cold",
-            "サ": "sa - like 'sa' in saw",
-            "シ": "shi - like 'she'",
-            "ス": "su - like 'sue'",
-            "セ": "se - like 'se' in set",
-            "ソ": "so - like 'so' in sold",
-            "タ": "ta - like 'ta' in taco",
-            "チ": "chi - like 'chee' in cheese",
-            "ツ": "tsu - like 'tsu' in tsunami",
-            "テ": "te - like 'te' in ten",
-            "ト": "to - like 'to' in toe",
-            "ナ": "na - like 'na' in nah",
-            "ニ": "ni - like 'knee'",
-            "ヌ": "nu - like 'new'",
-            "ネ": "ne - like 'ne' in net",
-            "ノ": "no - like 'no'",
-            "ハ": "ha - like 'ha' in hat",
-            "ヒ": "hi - like 'he'",
-            "フ": "fu - like 'who'",
-            "ヘ": "he - like 'he' in hen",
-            "ホ": "ho - like 'ho' in hope",
-            "マ": "ma - like 'ma' in mom",
-            "ミ": "mi - like 'me'",
-            "ム": "mu - like 'moo'",
-            "メ": "me - like 'me' in met",
-            "モ": "mo - like 'mo' in mow",
-            "ヤ": "ya - like 'ya' in yacht",
-            "ユ": "yu - like 'you'",
-            "ヨ": "yo - like 'yo' in yogurt",
-            "ラ": "ra - like 'ra' (soft r)",
-            "リ": "ri - like 'ree' (soft r)",
-            "ル": "ru - like 'roo' (soft r)",
-            "レ": "re - like 're' in red (soft r)",
-            "ロ": "ro - like 'ro' in row (soft r)",
-            "ワ": "wa - like 'wa' in want",
-            "ヲ": "wo - pronounced 'o'",
-            "ン": "n - like 'n' in ink"
-        },
+        description: "Master katakana to read foreign words, brand names, and modern Japanese!",
+        funFact: "🍔 マクドナルド (Makudonarudo) = McDonald's! Katakana makes English words Japanese.",
+        quickTips: [
+            "📐 Katakana = Angular and straight (vs hiragana's curves)",
+            "🌍 Used for: コーヒー (koohii - coffee), コンピューター (computer)",
+            "⚠️ Watch out: シ(shi) vs ツ(tsu), ソ(so) vs ン(n)",
+            "🎯 ー = long vowel mark (コーヒー = ko-o-hi-i)"
+        ],
+        practicePrompts: [
+            "Compare hiragana あ vs katakana ア",
+            "How do I write my name in katakana?",
+            "Quiz me on katakana vowels and K-row",
+            "What's the difference between シ and ツ?",
+            "Practice reading: アメリカ (America), コンピューター (computer), ピザ (pizza), テレビ (TV)"
+        ],
+        emoji: "🔤",
         commonWords: [
             "コーヒー (koohii) - coffee",
-            "カメラ (kamera) - camera",
+            "レストラン (resutoran) - restaurant",
             "ホテル (hoteru) - hotel",
-            "バス (basu) - bus",
-            "ペン (pen) - pen"
-        ],
-        funFact: "Katakana is angular while hiragana is curvy! Used for foreign words, emphasis, and country names.",
-        quickTips: [
-            "✏️ Katakana = angular shapes",
-            "🌍 Used for foreign words!",
-            "⚠️ Watch: シ(shi) vs ツ(tsu), ソ(so) vs ン(n)",
-            "➖ ー extends vowels: コーヒー"
-        ],
-        practicePrompts: [
-            "Show me how to write coffee in katakana",
-            "Practice: カメラ、ホテル、ペン",
-            "What's the difference between シ and ツ?",
-            "Write your name in katakana"
-        ]
-    },
-    
-    {
-        id: -1,
-        title: "Katakana with Dakuten & Combinations",
-        emoji: "🔤",
-        description: "ALL modified katakana - dakuten, handakuten, and combinations!",
-        topics: "Katakana dakuten marks and combination characters",
-        difficulty: "beginner",
-        estimatedTime: "45 minutes",
-        grammar: [
-            "G-ROW: ガ(ga) ギ(gi) グ(gu) ゲ(ge) ゴ(go)",
-            "Z-ROW: ザ(za) ジ(ji) ズ(zu) ゼ(ze) ゾ(zo)",
-            "D-ROW: ダ(da) ヂ(ji) ヅ(zu) デ(de) ド(do)",
-            "B-ROW: バ(ba) ビ(bi) ブ(bu) ベ(be) ボ(bo)",
-            "P-ROW: パ(pa) ピ(pi) プ(pu) ペ(pe) ポ(po)",
-            "COMBOS: キャ(kya) シャ(sha) チャ(cha) ニャ(nya) etc.",
-            "V-SOUNDS: ヴァ(va) ヴィ(vi) ヴ(vu) ヴェ(ve) ヴォ(vo)"
-        ],
-        vocabulary: [
-            "ガ (ga)", "ギ (gi)", "グ (gu)", "ゲ (ge)", "ゴ (go)",
-            "ザ (za)", "ジ (ji)", "ズ (zu)", "ゼ (ze)", "ゾ (zo)",
-            "ダ (da)", "デ (de)", "ド (do)",
-            "バ (ba)", "ビ (bi)", "ブ (bu)", "ベ (be)", "ボ (bo)",
-            "パ (pa)", "ピ (pi)", "プ (pu)", "ペ (pe)", "ポ (po)",
-            "キャ (kya)", "シャ (sha)", "チャ (cha)",
-            "ヴ (vu)"
-        ],
-        writingGuide: {
-            "ガ": "ga - ガラス(garasu) glass",
-            "ギ": "gi - ギター(gitaa) guitar",
-            "グ": "gu - グループ(guruupu) group",
-            "ゲ": "ge - ゲーム(geemu) game",
-            "ゴ": "go - ゴルフ(gorufu) golf",
-            "ザ": "za - ピザ(piza) pizza",
-            "ジ": "ji - ジュース(juusu) juice",
-            "ズ": "zu - ズボン(zubon) pants",
-            "ゼ": "ze - ゼロ(zero) zero",
-            "ゾ": "zo - ゾーン(zoon) zone",
-            "ダ": "da - ダンス(dansu) dance",
-            "デ": "de - デート(deeto) date",
-            "ド": "do - ドア(doa) door",
-            "バ": "ba - バス(basu) bus",
-            "ビ": "bi - ビール(biiru) beer",
-            "ブ": "bu - ブック(bukku) book",
-            "ベ": "be - ベッド(beddo) bed",
-            "ボ": "bo - ボール(booru) ball",
-            "パ": "pa - パン(pan) bread",
-            "ピ": "pi - ピンク(pinku) pink",
-            "プ": "pu - プール(puuru) pool",
-            "ペ": "pe - ペン(pen) pen",
-            "ポ": "po - ポスト(posuto) post",
-            "キャ": "kya - キャンプ(kyanpu) camp",
-            "シャ": "sha - シャツ(shatsu) shirt",
-            "チャ": "cha - チャンス(chansu) chance",
-            "ヴ": "vu - ヴァイオリン(vaiorin) violin"
-        },
-        commonWords: [
-            "ギター (gitaa) - guitar",
+            "テレビ (terebi) - television",
+            "パソコン (pasokon) - computer",
+            "スマホ (sumaho) - smartphone",
+            "インターネット (intaanetto) - internet",
+            "メール (meeru) - email",
             "ゲーム (geemu) - game",
-            "ピザ (piza) - pizza",
-            "ジュース (juusu) - juice",
-            "ビール (biiru) - beer",
-            "パン (pan) - bread",
-            "シャツ (shatsu) - shirt"
-        ],
-        funFact: "Katakana can create sounds not in traditional Japanese! ヴ(vu) for violin!",
-        quickTips: [
-            "✏️ Same dakuten rules as hiragana!",
-            "🌍 ヴ is special - only in katakana for V-sounds",
-            "➖ Long vowels use ー: ビール(biiru)",
-            "🎯 Common: シャ(sha), チャ(cha), ジャ(ja)"
-        ],
-        practicePrompts: [
-            "Write: game, guitar, pizza, juice",
-            "What's ヴァイオリン in English?",
-            "Practice dakuten: ガギグゲゴ",
-            "Show me katakana combinations"
+            "アニメ (anime) - animation"
         ]
     },
     

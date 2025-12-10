@@ -241,8 +241,44 @@ body {
     display: block;
 }
 
+.course-info-banner {
+    padding: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--accent-primary);
+}
+
+.banner-text {
+    font-size: 0.8125rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.banner-text small {
+    font-size: 0.6875rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
 .lessons-list {
     padding: 0 var(--spacing-sm) var(--spacing-sm);
+}
+
+.lesson-section-header {
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.lesson-section-header:first-child {
+    margin-top: 0;
 }
 
 .lesson-item {

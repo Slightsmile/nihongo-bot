@@ -67,10 +67,35 @@ class CourseModule {
     renderLessons() {
         this.lessonsList.innerHTML = '';
         
-        this.lessons.forEach(lesson => {
-            const lessonItem = this.createLessonElement(lesson);
-            this.lessonsList.appendChild(lessonItem);
-        });
+        // Group lessons by section and sort them
+        const writingLessons = this.lessons.filter(l => l.id < 0).sort((a, b) => a.id - b.id);
+        const regularLessons = this.lessons.filter(l => l.id >= 0).sort((a, b) => a.id - b.id);
+        
+        // Writing System Section
+        if (writingLessons.length > 0) {
+            const writingHeader = document.createElement('div');
+            writingHeader.className = 'lesson-section-header';
+            writingHeader.innerHTML = '<span>✍️ Writing System (Lessons 1-5)</span>';
+            this.lessonsList.appendChild(writingHeader);
+            
+            writingLessons.forEach(lesson => {
+                const lessonItem = this.createLessonElement(lesson);
+                this.lessonsList.appendChild(lessonItem);
+            });
+        }
+        
+        // Main Course Section
+        if (regularLessons.length > 0) {
+            const courseHeader = document.createElement('div');
+            courseHeader.className = 'lesson-section-header';
+            courseHeader.innerHTML = '<span>📚 N5 Main Course (Lessons 6-34)</span>';
+            this.lessonsList.appendChild(courseHeader);
+            
+            regularLessons.forEach(lesson => {
+                const lessonItem = this.createLessonElement(lesson);
+                this.lessonsList.appendChild(lessonItem);
+            });
+        }
     }
 
     createLessonElement(lesson) {
@@ -84,12 +109,19 @@ class CourseModule {
         
         // Add emoji if available
         const emoji = lesson.emoji || (lesson.id === 0 ? '🎌' : '📚');
-        const displayNumber = lesson.id === 0 ? '🎯' : lesson.id;
+        
+        // Display lesson numbers: 1-5 for kana lessons (-5 to -1), 6-34 for N5 lessons (0-28)
+        let displayNumber;
+        if (lesson.id < 0) {
+            displayNumber = `${lesson.id + 6}`;  // -5 becomes 1, -4 becomes 2, -3 becomes 3, -2 becomes 4, -1 becomes 5
+        } else {
+            displayNumber = `${lesson.id + 6}`;  // 0 becomes 6, 1 becomes 7, ..., 28 becomes 34
+        }
         
         div.innerHTML = `
             <div class="lesson-number ${lesson.difficulty || 'beginner'}-badge">${displayNumber}</div>
             <div class="lesson-info">
-                <div class="lesson-title">${lesson.title}</div>
+                <div class="lesson-title">${emoji} ${lesson.title}</div>
                 <div class="lesson-topics">${lesson.topics}</div>
                 ${lesson.estimatedTime ? `<div class="lesson-time">⏱️ ${lesson.estimatedTime}</div>` : ''}
             </div>
@@ -185,21 +217,39 @@ class CourseModule {
         // Topics
         content += `## 🎯 Topics Covered\n${lesson.topics}\n\n`;
         
-        // Grammar points
-        content += `## 📝 Grammar Points\n`;
+        // Grammar points / Characters
+        content += `## 📝 ${lesson.id < 0 ? 'Characters & Pronunciation' : 'Grammar Points'}\n`;
         lesson.grammar.forEach((g, i) => {
             content += `${i + 1}. ${g}\n`;
         });
         content += `\n`;
         
         // Key vocabulary
-        content += `## 📚 Key Vocabulary\n`;
-        const vocabToShow = lesson.vocabulary.slice(0, 10);
+        content += `## 📚 Key ${lesson.id < 0 ? 'Characters' : 'Vocabulary'}\n`;
+        const vocabToShow = lesson.vocabulary.slice(0, 15);
         content += `${vocabToShow.join('、')}`;
-        if (lesson.vocabulary.length > 10) {
-            content += `... (${lesson.vocabulary.length - 10} more)`;
+        if (lesson.vocabulary.length > 15) {
+            content += `... (${lesson.vocabulary.length - 15} more)`;
         }
         content += `\n\n`;
+        
+        // Writing guide for kana lessons
+        if (lesson.writingGuide && Object.keys(lesson.writingGuide).length > 0) {
+            content += `## ✍️ Writing Guide\n`;
+            Object.entries(lesson.writingGuide).forEach(([char, guide]) => {
+                content += `**${char}**: ${guide}\n`;
+            });
+            content += `\n`;
+        }
+        
+        // Common words for katakana
+        if (lesson.commonWords && lesson.commonWords.length > 0) {
+            content += `## 🌍 Common Words to Practice\n`;
+            lesson.commonWords.forEach(word => {
+                content += `• ${word}\n`;
+            });
+            content += `\n`;
+        }
         
         // Practice prompts
         if (lesson.practicePrompts && lesson.practicePrompts.length > 0) {
@@ -211,10 +261,10 @@ class CourseModule {
         } else {
             content += `---\n\n## 💪 Ready to Practice?\n\n`;
             content += `Ask me anything about this lesson! Try:\n`;
-            content += `• "Explain the first grammar point with examples"\n`;
+            content += `• "Explain the first ${lesson.id < 0 ? 'character' : 'grammar point'} with examples"\n`;
             content += `• "Give me practice sentences for this lesson"\n`;
             content += `• "Quiz me on lesson ${lesson.id}"\n`;
-            content += `• "Create a dialogue using these grammar points"\n`;
+            content += `• "Create a ${lesson.id < 0 ? 'writing drill' : 'dialogue'} using these ${lesson.id < 0 ? 'characters' : 'grammar points'}"\n`;
         }
         
         return content.trim();
