@@ -14,6 +14,9 @@ class NihongoBot {
         this.currentChatId = null;
         this.chats = this.loadChats();
         
+        // Make instance globally accessible for course module
+        window.nihongoBot = this;
+        
         this.init();
     }
 
