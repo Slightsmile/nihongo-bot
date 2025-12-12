@@ -1,96 +1,188 @@
-// N5 Course Module - Enhanced MEGA VERSION! 🎌
-// Super beginner-friendly with gamification and fun learning
+// Multi-level Course Module manager supporting reusable course containers
 
 class CourseModule {
-    constructor() {
-        this.courseHeader = document.getElementById('courseHeader');
-        this.courseContent = document.getElementById('courseContent');
-        this.lessonsList = document.getElementById('lessonsList');
+    constructor(config = {}) {
+        this.config = {
+            courseId: config.courseId || 'n5',
+            courseLevelLabel: config.courseLevelLabel || 'N5',
+            rootSelector: config.rootSelector || '.course-module',
+            rootElement: config.rootElement || null,
+            lessonsData: config.lessonsData,
+            globalLessonsName: config.globalLessonsName,
+            progressKey: config.progressKey || `${config.courseId || 'n5'}_progress`,
+            visitedKey: config.visitedKey || `${config.courseId || 'n5'}_courseVisited`,
+            bannerMessage: config.bannerMessage || '',
+            writingSectionTitle: config.writingSectionTitle || '✍️ Writing System Lessons',
+            mainSectionTitle: config.mainSectionTitle || '📚 Course Lessons',
+            nextLevelMessage: config.nextLevelMessage || 'Keep climbing to the next JLPT level! ✨'
+        };
+
+        this.root = this.resolveRootElement();
+
+        if (!this.root) {
+            console.warn(`[CourseModule] Root element not found for course: ${this.config.courseId}`);
+            return;
+        }
+
+        this.courseHeader = this.root.querySelector('.course-header');
+        this.courseContent = this.root.querySelector('.course-content');
+        this.lessonsList = this.root.querySelector('.lessons-list');
+        this.progressFill = this.root.querySelector('.progress-fill');
+        this.progressText = this.root.querySelector('.progress-text');
+        this.bannerText = this.root.querySelector('.course-info-banner .banner-text');
+
+        if (this.bannerText && this.config.bannerMessage) {
+            this.bannerText.innerHTML = this.config.bannerMessage;
+        }
+
         this.currentLesson = null;
+        this.lessons = [];
         this.completedLessons = this.loadProgress();
-        this.lessons = []; // Will be loaded from n5-lessons-data.js
-        
+
         this.init();
     }
 
+    resolveRootElement() {
+        if (this.config.rootElement instanceof HTMLElement) {
+            return this.config.rootElement;
+        }
+
+        if (typeof this.config.rootSelector === 'string') {
+            return document.querySelector(this.config.rootSelector);
+        }
+
+        if (Array.isArray(this.config.rootSelector)) {
+            for (const selector of this.config.rootSelector) {
+                const element = document.querySelector(selector);
+                if (element) {
+                    return element;
+                }
+            }
+        }
+
+        return null;
+    }
+
     async init() {
-        // Load lessons from external file
         await this.loadLessons();
-        
-        // Toggle course module
-        this.courseHeader.addEventListener('click', () => this.toggleCourse());
-        
-        // Render all lessons
+
+        if (this.courseHeader) {
+            this.courseHeader.addEventListener('click', () => this.toggleCourse());
+        }
+
         this.renderLessons();
-        
-        // Update progress
         this.updateProgress();
-        
-        // Auto-open course on first visit
-        if (!localStorage.getItem('courseVisited')) {
+
+        if (this.courseContent && !localStorage.getItem(this.config.visitedKey)) {
             this.courseContent.classList.remove('collapsed');
-            localStorage.setItem('courseVisited', 'true');
+            if (this.courseHeader) {
+                this.courseHeader.classList.remove('collapsed');
+            }
+            localStorage.setItem(this.config.visitedKey, 'true');
         }
     }
 
     async loadLessons() {
-        // Check if N5_LESSONS is already loaded
-        if (typeof N5_LESSONS !== 'undefined') {
-            this.lessons = N5_LESSONS;
-        } else {
-            // Fallback minimal lessons if external file not loaded
-            this.lessons = this.getFallbackLessons();
+        if (Array.isArray(this.config.lessonsData) && this.config.lessonsData.length > 0) {
+            this.lessons = this.cloneLessons(this.config.lessonsData);
+            return;
         }
+
+        if (typeof this.config.globalLessonsName === 'string') {
+            const globalLessons = window[this.config.globalLessonsName];
+            if (Array.isArray(globalLessons) && globalLessons.length > 0) {
+                this.lessons = this.cloneLessons(globalLessons);
+                return;
+            }
+        }
+
+        if (typeof N5_LESSONS !== 'undefined' && this.config.courseId === 'n5') {
+            this.lessons = this.cloneLessons(N5_LESSONS);
+            return;
+        }
+
+        this.lessons = this.getFallbackLessons();
+    }
+
+    cloneLessons(lessons) {
+        return lessons.map(lesson => ({ ...lesson }));
     }
 
     getFallbackLessons() {
-        // Minimal fallback if external file fails to load
         return [
             {
                 id: 0,
-                title: "🎌 Welcome! Let's Start Japanese",
-                topics: "Greetings, Basic phrases",
-                difficulty: "absolute-beginner",
-                grammar: ["こんにちは", "ありがとう", "すみません"],
-                vocabulary: ["おはよう", "こんにちは", "ありがとう"],
-                description: "Your first step into Japanese!",
-                emoji: "🎌"
+                title: `🎌 Welcome to Japanese (${this.config.courseLevelLabel})`,
+                topics: 'Course overview, learning tips',
+                difficulty: 'beginner',
+                grammar: ['Course structure introduction', 'Key study strategies'],
+                vocabulary: ['はじめまして - nice to meet you', 'よろしく - please treat me well'],
+                description: 'Your first step into this course. Let’s set you up for success!',
+                emoji: '🎌'
             }
         ];
     }
 
     toggleCourse() {
+        if (!this.courseHeader || !this.courseContent) {
+            return;
+        }
+
         this.courseHeader.classList.toggle('collapsed');
         this.courseContent.classList.toggle('collapsed');
     }
 
     renderLessons() {
+        if (!this.lessonsList) {
+            return;
+        }
+
         this.lessonsList.innerHTML = '';
-        
-        // Group lessons by section and sort them
-        const writingLessons = this.lessons.filter(l => l.id < 0).sort((a, b) => a.id - b.id);
-        const regularLessons = this.lessons.filter(l => l.id >= 0).sort((a, b) => a.id - b.id);
-        
-        // Writing System Section
+
+        if (!Array.isArray(this.lessons) || this.lessons.length === 0) {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'lesson-empty-state';
+            emptyState.textContent = 'Lessons coming soon! Stay tuned.';
+            this.lessonsList.appendChild(emptyState);
+            return;
+        }
+
+        const hasCustomSections = this.lessons.some(lesson => Boolean(lesson.section));
+
+        if (hasCustomSections) {
+            this.renderSectionedLessons();
+        } else {
+            this.renderLegacyLessons();
+        }
+    }
+
+    renderLegacyLessons() {
+        const writingLessons = this.lessons
+            .filter(lesson => typeof lesson.id === 'number' && lesson.id < 0)
+            .sort((a, b) => this.compareLessons(a, b));
+
+        const regularLessons = this.lessons
+            .filter(lesson => !(typeof lesson.id === 'number' && lesson.id < 0))
+            .sort((a, b) => this.compareLessons(a, b));
+
         if (writingLessons.length > 0) {
             const writingHeader = document.createElement('div');
             writingHeader.className = 'lesson-section-header';
-            writingHeader.innerHTML = '<span>✍️ Writing System (Lessons 1-5)</span>';
+            writingHeader.innerHTML = `<span>${this.config.writingSectionTitle}</span>`;
             this.lessonsList.appendChild(writingHeader);
-            
+
             writingLessons.forEach(lesson => {
                 const lessonItem = this.createLessonElement(lesson);
                 this.lessonsList.appendChild(lessonItem);
             });
         }
-        
-        // Main Course Section
+
         if (regularLessons.length > 0) {
-            const courseHeader = document.createElement('div');
-            courseHeader.className = 'lesson-section-header';
-            courseHeader.innerHTML = '<span>📚 N5 Main Course (Lessons 6-34)</span>';
-            this.lessonsList.appendChild(courseHeader);
-            
+            const mainHeader = document.createElement('div');
+            mainHeader.className = 'lesson-section-header';
+            mainHeader.innerHTML = `<span>${this.config.mainSectionTitle}</span>`;
+            this.lessonsList.appendChild(mainHeader);
+
             regularLessons.forEach(lesson => {
                 const lessonItem = this.createLessonElement(lesson);
                 this.lessonsList.appendChild(lessonItem);
@@ -98,31 +190,71 @@ class CourseModule {
         }
     }
 
+    renderSectionedLessons() {
+        const sectionMap = new Map();
+
+        this.lessons.forEach(lesson => {
+            const sectionName = lesson.section || 'Course Lessons';
+            if (!sectionMap.has(sectionName)) {
+                sectionMap.set(sectionName, []);
+            }
+            sectionMap.get(sectionName).push(lesson);
+        });
+
+        const sections = Array.from(sectionMap.entries()).map(([name, sectionLessons]) => {
+            const orderCandidates = sectionLessons
+                .map(lesson => typeof lesson.sectionOrder === 'number' ? lesson.sectionOrder : Number.MAX_SAFE_INTEGER);
+            const sectionOrder = Math.min(...orderCandidates);
+            sectionLessons.sort((a, b) => this.compareLessons(a, b));
+
+            const descriptor = sectionLessons.find(lesson => Boolean(lesson.sectionDescription));
+
+            return {
+                name,
+                lessons: sectionLessons,
+                order: sectionOrder,
+                description: descriptor ? descriptor.sectionDescription : ''
+            };
+        }).sort((a, b) => a.order - b.order);
+
+        sections.forEach(section => {
+            const header = document.createElement('div');
+            header.className = 'lesson-section-header';
+            header.innerHTML = `<span>${section.name}</span>`;
+            this.lessonsList.appendChild(header);
+
+            if (section.description) {
+                const description = document.createElement('div');
+                description.className = 'lesson-section-description';
+                description.textContent = section.description;
+                this.lessonsList.appendChild(description);
+            }
+
+            section.lessons.forEach(lesson => {
+                const lessonElement = this.createLessonElement(lesson);
+                this.lessonsList.appendChild(lessonElement);
+            });
+        });
+    }
+
     createLessonElement(lesson) {
         const isCompleted = this.completedLessons.includes(lesson.id);
         const isActive = this.currentLesson === lesson.id;
-        
-        const div = document.createElement('div');
-        div.className = `lesson-item ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`;
-        div.dataset.lessonId = lesson.id;
-        div.dataset.difficulty = lesson.difficulty || 'beginner';
-        
-        // Add emoji if available
-        const emoji = lesson.emoji || (lesson.id === 0 ? '🎌' : '📚');
-        
-        // Display lesson numbers: 1-5 for kana lessons (-5 to -1), 6-34 for N5 lessons (0-28)
-        let displayNumber;
-        if (lesson.id < 0) {
-            displayNumber = `${lesson.id + 6}`;  // -5 becomes 1, -4 becomes 2, -3 becomes 3, -2 becomes 4, -1 becomes 5
-        } else {
-            displayNumber = `${lesson.id + 6}`;  // 0 becomes 6, 1 becomes 7, ..., 28 becomes 34
-        }
-        
-        div.innerHTML = `
-            <div class="lesson-number ${lesson.difficulty || 'beginner'}-badge">${displayNumber}</div>
+        const displayNumber = this.getDisplayNumber(lesson);
+        const emoji = lesson.emoji || '📚';
+        const topics = Array.isArray(lesson.topics) ? lesson.topics.join(' • ') : lesson.topics || '';
+
+        const lessonElement = document.createElement('div');
+        lessonElement.className = `lesson-item ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`.trim();
+        lessonElement.dataset.lessonId = lesson.id;
+        lessonElement.dataset.courseId = this.config.courseId;
+        lessonElement.dataset.difficulty = lesson.difficulty || 'beginner';
+
+        lessonElement.innerHTML = `
+            <div class="lesson-number ${(lesson.difficulty || 'beginner')}-badge">${displayNumber}</div>
             <div class="lesson-info">
                 <div class="lesson-title">${emoji} ${lesson.title}</div>
-                <div class="lesson-topics">${lesson.topics}</div>
+                <div class="lesson-topics">${topics}</div>
                 ${lesson.estimatedTime ? `<div class="lesson-time">⏱️ ${lesson.estimatedTime}</div>` : ''}
             </div>
             ${isCompleted ? `
@@ -133,51 +265,124 @@ class CourseModule {
                 </div>
             ` : ''}
         `;
-        
-        div.addEventListener('click', () => this.selectLesson(lesson));
-        
-        // Add hover tooltip
-        div.title = `${lesson.description}\nDifficulty: ${lesson.difficulty || 'beginner'}`;
-        
-        return div;
+
+        lessonElement.addEventListener('click', () => this.selectLesson(lesson));
+
+        const tooltipParts = [lesson.description];
+        if (lesson.section) {
+            tooltipParts.push(`Section: ${lesson.section}`);
+        }
+        if (lesson.difficulty) {
+            tooltipParts.push(`Difficulty: ${lesson.difficulty}`);
+        }
+        if (lesson.estimatedTime) {
+            tooltipParts.push(`Time: ${lesson.estimatedTime}`);
+        }
+
+        lessonElement.title = tooltipParts.filter(Boolean).join('\n');
+
+        return lessonElement;
+    }
+
+    getDisplayNumber(lesson) {
+        if (lesson.displayNumber !== undefined) {
+            return lesson.displayNumber;
+        }
+
+        if (lesson.number !== undefined) {
+            return lesson.number;
+        }
+
+        if (typeof lesson.id === 'number') {
+            if (lesson.id < 0) {
+                return lesson.id + 6;
+            }
+
+            return lesson.id + 6;
+        }
+
+        return '?';
+    }
+
+    extractNumericSortValue(lesson) {
+        if (typeof lesson.order === 'number') {
+            return lesson.order;
+        }
+
+        if (typeof lesson.displayNumber === 'number') {
+            return lesson.displayNumber;
+        }
+
+        if (typeof lesson.number === 'number') {
+            return lesson.number;
+        }
+
+        if (typeof lesson.displayNumber === 'string') {
+            const match = lesson.displayNumber.match(/\d+/);
+            if (match) {
+                return parseInt(match[0], 10);
+            }
+        }
+
+        return typeof lesson.id === 'number' ? lesson.id : Number.MAX_SAFE_INTEGER;
+    }
+
+    compareLessons(a, b) {
+        const sectionOrderA = typeof a.sectionOrder === 'number' ? a.sectionOrder : Number.MAX_SAFE_INTEGER;
+        const sectionOrderB = typeof b.sectionOrder === 'number' ? b.sectionOrder : Number.MAX_SAFE_INTEGER;
+
+        if (sectionOrderA !== sectionOrderB) {
+            return sectionOrderA - sectionOrderB;
+        }
+
+        const numericA = this.extractNumericSortValue(a);
+        const numericB = this.extractNumericSortValue(b);
+
+        if (numericA !== numericB) {
+            return numericA - numericB;
+        }
+
+        return (a.id || 0) - (b.id || 0);
+    }
+
+    getSortedLessons() {
+        const lessons = Array.isArray(this.lessons) ? [...this.lessons] : [];
+        lessons.sort((a, b) => this.compareLessons(a, b));
+        return lessons;
     }
 
     selectLesson(lesson) {
         this.currentLesson = lesson.id;
-        
-        // Update UI
-        document.querySelectorAll('.lesson-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        const selectedItem = document.querySelector(`[data-lesson-id="${lesson.id}"]`);
-        if (selectedItem) {
-            selectedItem.classList.add('active');
-            selectedItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        if (this.root) {
+            this.root.querySelectorAll('.lesson-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            const selectedItem = this.root.querySelector(`[data-lesson-id="${lesson.id}"]`);
+            if (selectedItem) {
+                selectedItem.classList.add('active');
+                selectedItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         }
-        
-        // Load lesson content into chat
+
         this.loadLessonContent(lesson);
     }
 
     loadLessonContent(lesson) {
-        // Get the NihongoBot instance and trigger lesson content
-        if (window.nihongoBot) {
-            // Clear welcome screen
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            if (welcomeScreen && !welcomeScreen.classList.contains('hidden')) {
-                welcomeScreen.classList.add('fade-out');
-                setTimeout(() => welcomeScreen.classList.add('hidden'), 300);
-            }
-            
-            // Format lesson content as a message
-            const lessonContent = this.formatLessonContent(lesson);
-            
-            // Add as system message
-            window.nihongoBot.addMessage('assistant', lessonContent);
-            
-            // Scroll to bottom
-            window.nihongoBot.messagesContainer.scrollTop = window.nihongoBot.messagesContainer.scrollHeight;
+        if (!window.nihongoBot) {
+            return;
         }
+
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        if (welcomeScreen && !welcomeScreen.classList.contains('hidden')) {
+            welcomeScreen.classList.add('fade-out');
+            setTimeout(() => welcomeScreen.classList.add('hidden'), 300);
+        }
+
+        const lessonContent = this.formatLessonContent(lesson);
+        window.nihongoBot.addMessage('assistant', lessonContent);
+        window.nihongoBot.messagesContainer.scrollTop = window.nihongoBot.messagesContainer.scrollHeight;
     }
 
     formatLessonContent(lesson) {
@@ -187,86 +392,102 @@ class CourseModule {
             'intermediate': '🌳',
             'advanced': '🏔️'
         };
-        
+
         let content = `# ${lesson.title}\n\n`;
-        
-        // Add difficulty and time
-        if (lesson.difficulty) {
-            content += `${difficultyEmoji[lesson.difficulty]} **Difficulty:** ${lesson.difficulty}\n`;
+
+        if (lesson.section) {
+            content += `📚 **Section:** ${lesson.section}\n`;
         }
+
+        if (lesson.difficulty) {
+            const emoji = difficultyEmoji[lesson.difficulty] || '🎯';
+            content += `${emoji} **Difficulty:** ${lesson.difficulty}\n`;
+        }
+
         if (lesson.estimatedTime) {
             content += `⏱️ **Time:** ${lesson.estimatedTime}\n`;
         }
-        
+
         content += `\n📖 **Description:** ${lesson.description}\n\n`;
-        
-        // Fun fact
+
         if (lesson.funFact) {
             content += `💡 **Fun Fact:** ${lesson.funFact}\n\n`;
         }
-        
-        // Quick tips
-        if (lesson.quickTips && lesson.quickTips.length > 0) {
-            content += `## 💎 Quick Tips\n`;
+
+        if (Array.isArray(lesson.quickTips) && lesson.quickTips.length > 0) {
+            content += '## 💎 Quick Tips\n';
             lesson.quickTips.forEach(tip => {
                 content += `${tip}\n`;
             });
-            content += `\n`;
+            content += '\n';
         }
-        
-        // Topics
-        content += `## 🎯 Topics Covered\n${lesson.topics}\n\n`;
-        
-        // Grammar points / Characters
-        content += `## 📝 ${lesson.id < 0 ? 'Characters & Pronunciation' : 'Grammar Points'}\n`;
-        lesson.grammar.forEach((g, i) => {
-            content += `${i + 1}. ${g}\n`;
+
+        const topics = Array.isArray(lesson.topics) ? lesson.topics.join(' / ') : (lesson.topics || 'Core lesson focus');
+        content += `## 🎯 Topics Covered\n${topics}\n\n`;
+
+        const grammarPoints = Array.isArray(lesson.grammar) ? lesson.grammar : [];
+        content += `## 📝 Grammar Points\n`;
+        grammarPoints.forEach((point, index) => {
+            content += `${index + 1}. ${point}\n`;
         });
-        content += `\n`;
-        
-        // Key vocabulary
-        content += `## 📚 Key ${lesson.id < 0 ? 'Characters' : 'Vocabulary'}\n`;
-        const vocabToShow = lesson.vocabulary.slice(0, 15);
-        content += `${vocabToShow.join('、')}`;
-        if (lesson.vocabulary.length > 15) {
-            content += `... (${lesson.vocabulary.length - 15} more)`;
+        if (grammarPoints.length === 0) {
+            content += 'No grammar points listed yet.\n';
         }
-        content += `\n\n`;
-        
-        // Writing guide for kana lessons
-        if (lesson.writingGuide && Object.keys(lesson.writingGuide).length > 0) {
-            content += `## ✍️ Writing Guide\n`;
-            Object.entries(lesson.writingGuide).forEach(([char, guide]) => {
-                content += `**${char}**: ${guide}\n`;
+        content += '\n';
+
+        const vocabularyList = Array.isArray(lesson.vocabulary) ? lesson.vocabulary : [];
+        content += '## 📚 Key Vocabulary\n';
+        if (vocabularyList.length > 0) {
+            const vocabToShow = vocabularyList.slice(0, 20);
+            content += `${vocabToShow.join('、')}`;
+            if (vocabularyList.length > 20) {
+                content += `... (${vocabularyList.length - 20} more)`;
+            }
+        } else {
+            content += 'Vocabulary for this lesson is coming soon!';
+        }
+        content += '\n\n';
+
+        if (lesson.kanjiFocus && lesson.kanjiFocus.length > 0) {
+            content += '## 🀄 Kanji Focus\n';
+            lesson.kanjiFocus.forEach(kanji => {
+                content += `• ${kanji}\n`;
             });
-            content += `\n`;
+            content += '\n';
         }
-        
-        // Common words for katakana
-        if (lesson.commonWords && lesson.commonWords.length > 0) {
-            content += `## 🌍 Common Words to Practice\n`;
-            lesson.commonWords.forEach(word => {
-                content += `• ${word}\n`;
+
+        if (lesson.examples && lesson.examples.length > 0) {
+            content += '## 🗣️ Example Sentences\n';
+            lesson.examples.forEach(example => {
+                content += `• ${example}\n`;
             });
-            content += `\n`;
+            content += '\n';
         }
-        
-        // Practice prompts
-        if (lesson.practicePrompts && lesson.practicePrompts.length > 0) {
-            content += `---\n\n## 💪 Ready to Practice?\n\n`;
-            content += `Try these with me:\n\n`;
-            lesson.practicePrompts.forEach((prompt, i) => {
-                content += `${i + 1}. "${prompt}"\n`;
+
+        if (lesson.resources && lesson.resources.length > 0) {
+            content += '## 🔗 Extra Resources\n';
+            lesson.resources.forEach(resource => {
+                content += `• ${resource}\n`;
+            });
+            content += '\n';
+        }
+
+        const lessonLabel = lesson.displayNumber || lesson.number || lesson.id;
+
+        if (Array.isArray(lesson.practicePrompts) && lesson.practicePrompts.length > 0) {
+            content += '---\n\n## 💪 Ready to Practice?\n\nTry these with me:\n\n';
+            lesson.practicePrompts.forEach((prompt, index) => {
+                content += `${index + 1}. "${prompt}"\n`;
             });
         } else {
-            content += `---\n\n## 💪 Ready to Practice?\n\n`;
-            content += `Ask me anything about this lesson! Try:\n`;
-            content += `• "Explain the first ${lesson.id < 0 ? 'character' : 'grammar point'} with examples"\n`;
+            content += '---\n\n## 💪 Ready to Practice?\n\n';
+            content += 'Ask me anything about this lesson! Try:\n';
+            content += `• "Explain the first grammar point with examples"\n`;
             content += `• "Give me practice sentences for this lesson"\n`;
-            content += `• "Quiz me on lesson ${lesson.id}"\n`;
-            content += `• "Create a ${lesson.id < 0 ? 'writing drill' : 'dialogue'} using these ${lesson.id < 0 ? 'characters' : 'grammar points'}"\n`;
+            content += `• "Quiz me on lesson ${lessonLabel}"\n`;
+            content += `• "Create a dialogue using these grammar points"\n`;
         }
-        
+
         return content.trim();
     }
 
@@ -276,8 +497,6 @@ class CourseModule {
             this.saveProgress();
             this.updateProgress();
             this.renderLessons();
-            
-            // Show celebration message
             this.showCompletionCelebration(lessonId);
         }
     }
@@ -288,13 +507,13 @@ class CourseModule {
             const celebration = `
 🎉 **Congratulations!** 🎉
 
-You've completed **${lesson.title}**!
+You've completed **${lesson.title}** in the ${this.config.courseLevelLabel} course!
 
 Keep up the amazing work! ${this.getEncouragementMessage()}
 
 **Progress:** ${this.completedLessons.length}/${this.lessons.length} lessons completed
             `.trim();
-            
+
             window.nihongoBot.addMessage('assistant', celebration);
         }
     }
@@ -313,96 +532,150 @@ Keep up the amazing work! ${this.getEncouragementMessage()}
     }
 
     updateProgress() {
-        const total = this.lessons.length;
+        const total = Array.isArray(this.lessons) ? this.lessons.length : 0;
         const completed = this.completedLessons.length;
-        const percentage = Math.round((completed / total) * 100);
-        
-        const progressFill = document.querySelector('.progress-fill');
-        const progressText = document.querySelector('.progress-text');
-        
-        if (progressFill) {
-            progressFill.style.width = `${percentage}%`;
+        const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+        if (this.progressFill) {
+            this.progressFill.style.width = `${percentage}%`;
         }
-        
-        if (progressText) {
-            progressText.textContent = `${completed} of ${total} lessons${percentage > 0 ? ` (${percentage}%)` : ''}`;
+
+        if (this.progressText) {
+            this.progressText.textContent = `${completed} of ${total} lessons${percentage > 0 ? ` (${percentage}%)` : ''}`;
         }
-        
-        // Update course header with progress emoji
+
         this.updateCourseHeaderEmoji(percentage);
     }
 
     updateCourseHeaderEmoji(percentage) {
+        if (!this.courseHeader) {
+            return;
+        }
+
         const title = this.courseHeader.querySelector('.course-title');
-        if (title) {
-            let emoji = '📖';
-            if (percentage >= 100) emoji = '🏆';
-            else if (percentage >= 75) emoji = '🌟';
-            else if (percentage >= 50) emoji = '💪';
-            else if (percentage >= 25) emoji = '🌱';
-            
-            const iconSpan = title.querySelector('.course-icon');
-            if (iconSpan) {
-                iconSpan.textContent = emoji;
-            }
+        if (!title) {
+            return;
+        }
+
+        let emoji = '📖';
+        if (percentage >= 100) emoji = '🏆';
+        else if (percentage >= 75) emoji = '🌟';
+        else if (percentage >= 50) emoji = '💪';
+        else if (percentage >= 25) emoji = '🌱';
+
+        const iconSpan = title.querySelector('.course-icon');
+        if (iconSpan) {
+            iconSpan.textContent = emoji;
         }
     }
 
     loadProgress() {
-        const saved = localStorage.getItem('n5_progress');
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem(this.config.progressKey);
+            return saved ? JSON.parse(saved) : [];
+        } catch (error) {
+            console.warn(`[CourseModule] Failed to load progress for ${this.config.courseId}`, error);
+            return [];
+        }
     }
 
     saveProgress() {
-        localStorage.setItem('n5_progress', JSON.stringify(this.completedLessons));
+        try {
+            localStorage.setItem(this.config.progressKey, JSON.stringify(this.completedLessons));
+        } catch (error) {
+            console.warn(`[CourseModule] Failed to save progress for ${this.config.courseId}`, error);
+        }
     }
 
     resetProgress() {
-        if (confirm('🔄 Are you sure you want to reset ALL your progress?\n\nThis will clear all completed lessons and cannot be undone!')) {
+        const confirmation = confirm(
+            `🔄 Reset ${this.config.courseLevelLabel} progress?\n\nThis will clear every completed lesson and cannot be undone!`
+        );
+
+        if (confirmation) {
             this.completedLessons = [];
             this.currentLesson = null;
             this.saveProgress();
             this.updateProgress();
             this.renderLessons();
-            
+
             if (window.nihongoBot) {
-                window.nihongoBot.addMessage('assistant', '✨ Progress reset! Ready to start your Japanese journey again! がんばって！💪');
+                window.nihongoBot.addMessage('assistant', `✨ ${this.config.courseLevelLabel} progress reset! Ready for a fresh start! がんばって！💪`);
             }
         }
     }
 
-    // Get next recommended lesson
     getNextLesson() {
-        for (let lesson of this.lessons) {
-            if (!this.completedLessons.includes(lesson.id)) {
-                return lesson;
-            }
-        }
-        return null; // All lessons completed!
+        const sortedLessons = this.getSortedLessons();
+        return sortedLessons.find(lesson => !this.completedLessons.includes(lesson.id)) || null;
     }
 
-    // Jump to next uncompleted lesson
     goToNextLesson() {
         const nextLesson = this.getNextLesson();
         if (nextLesson) {
             this.selectLesson(nextLesson);
-        } else {
-            if (window.nihongoBot) {
-                window.nihongoBot.addMessage('assistant', '🎉🏆 Amazing! You\'ve completed ALL lessons!\n\nYou\'re ready for N4 level! おめでとうございます！🎌✨');
-            }
+            return;
+        }
+
+        if (window.nihongoBot) {
+            window.nihongoBot.addMessage('assistant', `🎉🏆 Amazing! You've completed ALL ${this.config.courseLevelLabel} lessons!\n\n${this.config.nextLevelMessage}`);
         }
     }
 }
 
-// Initialize course module when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    window.courseModule = new CourseModule();
-    
-    // Add keyboard shortcut: Ctrl+L to go to next lesson
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.key === 'l' && window.courseModule) {
-            e.preventDefault();
-            window.courseModule.goToNextLesson();
+    window.courseModules = window.courseModules || {};
+
+    if (typeof N5_LESSONS !== 'undefined') {
+        const n5Module = new CourseModule({
+            courseId: 'n5',
+            courseLevelLabel: 'N5',
+            rootSelector: '.course-module[data-course="n5"]',
+            lessonsData: N5_LESSONS,
+            progressKey: 'n5_progress',
+            visitedKey: 'n5_courseVisited',
+            bannerMessage: '✍️ Lessons 1-5 = ALL Hiragana & Katakana!<br><small>Every character with pronunciation guides</small>',
+            writingSectionTitle: '✍️ Writing System (Lessons 1-5)',
+            mainSectionTitle: '📚 N5 Main Course (Lessons 6-34)',
+            nextLevelMessage: "You're ready for N4 level! おめでとうございます！🎌✨"
+        });
+
+        if (n5Module && n5Module.root) {
+            window.courseModules.n5 = n5Module;
+            window.courseModule = n5Module; // backward compatibility
+        }
+    }
+
+    if (typeof N4_LESSONS !== 'undefined') {
+        const n4Module = new CourseModule({
+            courseId: 'n4',
+            courseLevelLabel: 'N4',
+            rootSelector: '.course-module[data-course="n4"]',
+            lessonsData: N4_LESSONS,
+            progressKey: 'n4_progress',
+            visitedKey: 'n4_courseVisited',
+            bannerMessage: '🧠 Build complete N4 grammar, vocabulary, reading & listening confidence.',
+            mainSectionTitle: '📘 N4 Comprehensive Course',
+            nextLevelMessage: "You're ready for N3 level! おめでとうございます！🎌✨"
+        });
+
+        if (n4Module && n4Module.root) {
+            window.courseModules.n4 = n4Module;
+        }
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.ctrlKey && event.key === 'l') {
+            event.preventDefault();
+
+            const modules = Object.values(window.courseModules || {});
+            const activeModule = modules.find(module => module && module.courseContent && !module.courseContent.classList.contains('collapsed'));
+
+            if (activeModule) {
+                activeModule.goToNextLesson();
+            } else if (window.courseModule) {
+                window.courseModule.goToNextLesson();
+            }
         }
     });
 });

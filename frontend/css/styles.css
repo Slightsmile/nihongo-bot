@@ -383,6 +383,24 @@ body {
     margin-top: 0;
 }
 
+.lesson-section-description {
+    padding: 0 var(--spacing-md) var(--spacing-sm);
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.lesson-empty-state {
+    margin: var(--spacing-md);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    text-align: center;
+    font-size: 0.875rem;
+}
+
 .lesson-item {
     display: flex;
     align-items: center;
