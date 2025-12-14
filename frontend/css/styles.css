@@ -11,35 +11,35 @@
     --bg-secondary: #1a1a1a;
     --bg-tertiary: #252525;
     --bg-hover: #2f2f2f;
-    
+
     --text-primary: #ffffff;
     --text-secondary: #a8a8a8;
     --text-tertiary: #737373;
-    
+
     --accent-primary: #6366f1;
     --accent-hover: #7c3aed;
     --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    
+
     --border-color: #2a2a2a;
     --border-light: #3a3a3a;
-    
+
     --success: #10b981;
     --warning: #f59e0b;
     --error: #ef4444;
-    
+
     /* Spacing */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
-    
+
     /* Border Radius */
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
     --radius-lg: 0.75rem;
     --radius-xl: 1rem;
-    
+
     /* Transitions */
     --transition-base: 0.2s ease;
     --transition-slow: 0.3s ease;
@@ -51,18 +51,18 @@
     --bg-secondary: #f9fafb;
     --bg-tertiary: #f3f4f6;
     --bg-hover: #e5e7eb;
-    
+
     --text-primary: #111827;
     --text-secondary: #4b5563;
     --text-tertiary: #6b7280;
-    
+
     --accent-primary: #6366f1;
     --accent-hover: #4f46e5;
     --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    
+
     --border-color: #e5e7eb;
     --border-light: #d1d5db;
-    
+
     --success: #10b981;
     --warning: #f59e0b;
     --error: #ef4444;
@@ -72,9 +72,68 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--bg-primary);
     color: var(--text-primary);
+}
+
+/* App container pages (chat interface) have controlled overflow */
+.app-container {
     overflow: hidden;
     height: 100vh;
     width: 100vw;
+}
+
+/* Standalone theme toggle for pages without sidebar */
+.theme-toggle-standalone {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+    color: var(--text-primary);
+}
+
+.theme-toggle-standalone:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-primary);
+    transform: scale(1.05);
+}
+
+.theme-toggle-standalone:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle-standalone .sun-icon,
+.theme-toggle-standalone .moon-icon {
+    position: absolute;
+    transition: all var(--transition-base);
+}
+
+[data-theme="dark"] .theme-toggle-standalone .sun-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+[data-theme="dark"] .theme-toggle-standalone .moon-icon {
+    opacity: 0;
+    transform: rotate(-180deg);
+}
+
+[data-theme="light"] .theme-toggle-standalone .sun-icon {
+    opacity: 0;
+    transform: rotate(180deg);
+}
+
+[data-theme="light"] .theme-toggle-standalone .moon-icon {
+    opacity: 1;
+    transform: rotate(0deg);
 }
 
 /* Custom Scrollbar */
@@ -454,8 +513,6 @@ body {
     border-color: transparent;
     color: white;
 }
-    color: white;
-}
 
 .lesson-item.active .lesson-number {
     border: 2px solid var(--accent-primary);
@@ -581,9 +638,8 @@ body {
 .knowledge-btn:hover {
     background: var(--bg-hover);
     border-color: var(--accent-primary);
-}
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(99,102,241,0.06);
+    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.06);
 }
 
 @media (max-width: 480px) {
@@ -610,7 +666,8 @@ body {
     width: 100%;
     margin: 0 auto;
     position: relative;
-    min-height: 0; /* allow children to scroll inside flex */
+    min-height: 0;
+    /* allow children to scroll inside flex */
 }
 
 .messages-container {
@@ -618,19 +675,23 @@ body {
     overflow-y: auto;
     padding: var(--spacing-xl);
     scroll-behavior: smooth;
-    min-height: 0; /* ensure scroll in nested flex */
+    min-height: 0;
+    /* ensure scroll in nested flex */
 }
 
 /* Hide Scrollbar (remove visible slider while scrolling) */
 .messages-container,
 .sidebar-content {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE 10+ and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ and Edge */
 }
 
 .messages-container::-webkit-scrollbar,
 .sidebar-content::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    display: none;
+    /* Chrome, Safari and Opera */
 }
 
 /* Welcome Screen */
@@ -755,6 +816,7 @@ body {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -832,7 +894,8 @@ body {
     margin-bottom: 0;
 }
 
-.message-text ul, .message-text ol {
+.message-text ul,
+.message-text ol {
     margin-left: var(--spacing-lg);
     margin-bottom: var(--spacing-sm);
 }
@@ -857,7 +920,9 @@ body {
     margin: var(--spacing-sm) 0;
 }
 
-.message-text h1, .message-text h2, .message-text h3 {
+.message-text h1,
+.message-text h2,
+.message-text h3 {
     margin-top: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
 }
@@ -890,10 +955,14 @@ body {
 }
 
 @keyframes typing {
-    0%, 60%, 100% {
+
+    0%,
+    60%,
+    100% {
         opacity: 0.3;
         transform: scale(0.8);
     }
+
     30% {
         opacity: 1;
         transform: scale(1);
@@ -977,11 +1046,6 @@ body {
 }
 
 /* Unified Theme Styling - Same for both Light & Dark */
-.message.user {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: 1px solid transparent;
-}
 
 .message.assistant {
     background: var(--bg-tertiary);
@@ -1025,23 +1089,23 @@ body {
         z-index: 1000;
         transform: translateX(-100%);
     }
-    
+
     .sidebar.open {
         transform: translateX(0);
     }
-    
+
     .welcome-title {
         font-size: 2rem;
     }
-    
+
     .feature-cards {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .messages-container {
         padding: var(--spacing-md);
     }
-    
+
     .input-container {
         padding: var(--spacing-md);
     }
@@ -1051,11 +1115,11 @@ body {
     .feature-cards {
         grid-template-columns: 1fr;
     }
-    
+
     .prompt-chips {
         flex-direction: column;
     }
-    
+
     .prompt-chip {
         width: 100%;
     }

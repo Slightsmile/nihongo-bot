@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Hub - NihongoBot</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/knowledge-hub.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🗾</span>
+                    <span class="logo-text">NihongoBot</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="sidebar-content">
+                <button class="new-chat-btn" id="newChatBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    New Chat
+                </button>
+
+                <button class="new-chat-btn" id="backToChatBtn" style="margin-top: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back to Chat
+                </button>
+
+                <div class="chat-history" id="chatHistory">
+                    <!-- Chat history items will be added here -->
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <button class="knowledge-btn active" id="knowledgeBtn" title="Knowledge Hub"
+                        aria-label="Knowledge Hub">Knowledge Hub</button>
+                    <span class="user-name"></span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="knowledge-hub-main">
+            <div class="knowledge-hub-container">
+                <div class="hub-header">
+                    <h1 class="hub-title">
+                        <span class="gradient-text">Knowledge Hub</span>
+                    </h1>
+                    <p class="hub-subtitle">Explore Japanese learning resources and courses</p>
+                </div>
+
+                <div class="hub-grid">
+                    <!-- N5 Course Card -->
+                    <div class="hub-card" data-course="n5">
+                        <div class="card-icon">📖</div>
+                        <h2 class="card-title">Japanese Course (N5)</h2>
+                        <p class="card-description">
+                            Master the fundamentals of Japanese with our comprehensive N5 course.
+                            Learn Hiragana, Katakana, basic grammar, and essential vocabulary.
+                        </p>
+                        <div class="card-features">
+                            <div class="feature-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Complete Hiragana & Katakana</span>
+                            </div>
+                            <div class="feature-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Basic Grammar Patterns</span>
+                            </div>
+                            <div class="feature-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>800+ Essential Words</span>
+                            </div>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0 of 0 lessons completed</span>
+                        </div>
+                        <button class="card-button">Start Learning</button>
+                    </div>
+
+                    <!-- N4 Course Card -->
+                    <div class="hub-card" data-course="n4">
+                        <div class="card-icon">📚</div>
+                        <h2 class="card-title">Japanese Course (N4)</h2>
+                        <p class="card-description">
+                            Build on your foundation with intermediate Japanese.
+                            Expand your grammar knowledge, vocabulary, and reading comprehension.
+                        </p>
+                        <div class="card-features">
+                            <div class="feature-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Advanced Grammar</span>
+                            </div>
+                            <div class="feature-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>1500+ Vocabulary Words</span>
+                            </div>
+                            <div class="feature-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Reading & Listening Practice</span>
+                            </div>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0 of 0 lessons completed</span>
+                        </div>
+                        <button class="card-button">Start Learning</button>
+                    </div>
+
+                    <!-- Grammar Reference Card -->
+                    <div class="hub-card resource-card">
+                        <div class="card-icon">📝</div>
+                        <h2 class="card-title">Grammar Reference</h2>
+                        <p class="card-description">
+                            Quick reference guide for Japanese particles, verb conjugations,
+                            and essential grammar patterns.
+                        </p>
+                        <button class="card-button secondary">Coming Soon</button>
+                    </div>
+
+                    <!-- Kanji Dictionary Card -->
+                    <div class="hub-card resource-card">
+                        <div class="card-icon">✍️</div>
+                        <h2 class="card-title">Kanji Dictionary</h2>
+                        <p class="card-description">
+                            Search and learn kanji with stroke order, readings, and example words.
+                            Perfect for JLPT preparation.
+                        </p>
+                        <button class="card-button secondary">Coming Soon</button>
+                    </div>
+
+                    <!-- Practice Tests Card -->
+                    <div class="hub-card resource-card">
+                        <div class="card-icon">🎯</div>
+                        <h2 class="card-title">Practice Tests</h2>
+                        <p class="card-description">
+                            Test your knowledge with JLPT-style practice questions.
+                            Track your progress and identify areas for improvement.
+                        </p>
+                        <button class="card-button secondary">Coming Soon</button>
+                    </div>
+
+                    <!-- Cultural Notes Card -->
+                    <div class="hub-card resource-card">
+                        <div class="card-icon">🎌</div>
+                        <h2 class="card-title">Cultural Notes</h2>
+                        <p class="card-description">
+                            Learn about Japanese culture, customs, and etiquette.
+                            Understand the context behind the language.
+                        </p>
+                        <button class="card-button secondary">Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/knowledge-hub.js"></script>
+</body>
+
+</html>

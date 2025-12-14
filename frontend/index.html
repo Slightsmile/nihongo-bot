@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar -->
@@ -19,7 +21,8 @@
                     <span class="logo-text">NihongoBot</span>
                 </div>
                 <button class="theme-toggle" id="themeToggle" title="Toggle theme">
-                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
                         <circle cx="12" cy="12" r="5"></circle>
                         <line x1="12" y1="1" x2="12" y2="3"></line>
                         <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -30,12 +33,13 @@
                         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
-                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
                 </button>
             </div>
-            
+
             <div class="sidebar-content">
                 <button class="new-chat-btn" id="newChatBtn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -44,74 +48,17 @@
                     </svg>
                     New Chat
                 </button>
-                
-                <!-- Course Module Navigation -->
-                <div class="course-module" data-course="n5">
-                    <div class="course-header">
-                        <div class="course-title">
-                            <span class="course-icon">📖</span>
-                            <span>Japanese Course (N5)</span>
-                        </div>
-                        <svg class="course-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </div>
-                    <div class="course-content">
-                        <div class="course-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 0%"></div>
-                            </div>
-                            <span class="progress-text">0 of 0 lessons</span>
-                        </div>
-                        <div class="course-info-banner">
-                            <div class="banner-text">
-                                ✍️ Lessons 1-5 = ALL Hiragana & Katakana!<br>
-                                <small>Every character with pronunciation guides</small>
-                            </div>
-                        </div>
-                        <div class="lessons-list">
-                            <!-- Lessons will be dynamically populated -->
-                        </div>
-                    </div>
-                </div>
 
-                <div class="course-module" data-course="n4">
-                    <div class="course-header">
-                        <div class="course-title">
-                            <span class="course-icon">📖</span>
-                            <span>Japanese Course (N4)</span>
-                        </div>
-                        <svg class="course-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </div>
-                    <div class="course-content collapsed">
-                        <div class="course-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 0%"></div>
-                            </div>
-                            <span class="progress-text">0 of 0 lessons</span>
-                        </div>
-                        <div class="course-info-banner">
-                            <div class="banner-text">
-                                🧠 Build complete N4 grammar, vocabulary, reading & listening confidence.
-                            </div>
-                        </div>
-                        <div class="lessons-list">
-                            <!-- Lessons will be dynamically populated -->
-                        </div>
-                    </div>
-                </div>
-                
                 <div class="chat-history" id="chatHistory">
                     <!-- Chat history items will be added here -->
                 </div>
             </div>
-            
+
             <div class="sidebar-footer">
                 <div class="user-info">
                     <div class="user-avatar">A</div>
-                    <button class="knowledge-btn" id="knowledgeBtn" title="Knowledge Hub" aria-label="Knowledge Hub">Knowledge Hub</button>
+                    <button class="knowledge-btn" id="knowledgeBtn" title="Knowledge Hub"
+                        aria-label="Knowledge Hub">Knowledge Hub</button>
                     <span class="user-name"></span>
                 </div>
             </div>
@@ -128,7 +75,7 @@
                                 <span class="gradient-text">Welcome</span>
                             </h1>
                             <p class="welcome-subtitle">Your modern Japanese learning assistant</p>
-                            
+
                             <div class="feature-cards">
                                 <div class="feature-card">
                                     <div class="feature-icon">🌏</div>
@@ -168,14 +115,11 @@
                 <!-- Input Area -->
                 <div class="input-container">
                     <div class="input-wrapper">
-                        <textarea 
-                            id="messageInput" 
-                            class="message-input" 
-                            placeholder="Ask me anything about Japanese..."
-                            rows="1"
-                        ></textarea>
+                        <textarea id="messageInput" class="message-input"
+                            placeholder="Ask me anything about Japanese..." rows="1"></textarea>
                         <button id="sendBtn" class="send-btn" disabled>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <line x1="22" y1="2" x2="11" y2="13"></line>
                                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                             </svg>
@@ -192,4 +136,5 @@
     <script src="js/course.js"></script>
     <script src="js/app.js"></script>
 </body>
+
 </html>

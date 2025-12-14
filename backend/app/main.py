@@ -22,6 +22,9 @@ FRONTEND_DIR = os.path.join(PROJECT_ROOT, "frontend")
 CSS_DIR = os.path.join(FRONTEND_DIR, "css")
 JS_DIR = os.path.join(FRONTEND_DIR, "js")
 INDEX_HTML = os.path.join(FRONTEND_DIR, "index.html")
+KNOWLEDGE_HUB_HTML = os.path.join(FRONTEND_DIR, "knowledge-hub.html")
+N4_LESSONS_HTML = os.path.join(FRONTEND_DIR, "n4-lessons.html")
+N5_LESSONS_HTML = os.path.join(FRONTEND_DIR, "n5-lessons.html")
 
 # Mount frontend asset folders for direct paths in index.html
 if os.path.isdir(CSS_DIR):
@@ -49,6 +52,28 @@ app.include_router(models.router, prefix="/api/models", tags=["models"])
 async def root():
     return FileResponse(INDEX_HTML)
 
+@app.get("/index.html", include_in_schema=False)
+async def index_redirect():
+    """Redirect index.html to root"""
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/", status_code=301)
+
+@app.get("/knowledge-hub", include_in_schema=False)
+@app.get("/knowledge-hub.html", include_in_schema=False)
+async def knowledge_hub():
+    return FileResponse(KNOWLEDGE_HUB_HTML)
+
+@app.get("/n4-lessons", include_in_schema=False)
+@app.get("/n4-lessons.html", include_in_schema=False)
+async def n4_lessons():
+    return FileResponse(N4_LESSONS_HTML)
+
+@app.get("/n5-lessons", include_in_schema=False)
+@app.get("/n5-lessons.html", include_in_schema=False)
+async def n5_lessons():
+    return FileResponse(N5_LESSONS_HTML)
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+

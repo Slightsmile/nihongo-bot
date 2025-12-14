@@ -7,23 +7,23 @@ class NihongoBot {
         this.newChatBtn = document.getElementById('newChatBtn');
         this.welcomeScreen = document.getElementById('welcomeScreen');
         this.chatHistory = document.getElementById('chatHistory');
-        
+
         // API Configuration
         this.apiBaseUrl = 'http://localhost:8000/api';
-        
+
         this.currentChatId = null;
         this.chats = this.loadChats();
-        
+
         // Make instance globally accessible for course module
         window.nihongoBot = this;
-        
+
         this.init();
     }
 
     init() {
         // Theme Toggle
         this.initTheme();
-        
+
         // Event Listeners
         this.sendBtn.addEventListener('click', () => this.sendMessage());
         this.messageInput.addEventListener('input', () => this.handleInput());
@@ -34,17 +34,10 @@ class NihongoBot {
         if (knowledgeBtn) {
             knowledgeBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Placeholder action — open knowledge page or show modal
-                // Replace with app-specific navigation when available
-                try {
-                    // try to navigate if a route exists
-                    window.location.href = '/knowledge';
-                } catch (err) {
-                    alert('Knowledge Hub — coming soon');
-                }
+                window.location.href = 'knowledge-hub.html';
             });
         }
-        
+
         // Prompt chips
         document.querySelectorAll('.prompt-chip').forEach(chip => {
             chip.addEventListener('click', (e) => {
@@ -120,7 +113,7 @@ class NihongoBot {
             const response = await this.getAIResponse(message);
             this.removeTypingIndicator(typingId);
             this.addMessage('bot', response);
-            
+
             // Save bot response
             this.chats[this.currentChatId].messages.push({
                 role: 'bot',
@@ -138,34 +131,34 @@ class NihongoBot {
     addMessage(role, content) {
         const messageEl = document.createElement('div');
         messageEl.className = `message ${role}`;
-        
+
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
         avatar.textContent = role === 'user' ? '' : '🗾';
-        
+
         const contentWrapper = document.createElement('div');
         contentWrapper.className = 'message-content';
-        
+
         const header = document.createElement('div');
         header.className = 'message-header';
-        
+
         const name = document.createElement('span');
         name.className = 'message-name';
         name.textContent = '';
-        
+
         // Only show the name (no time)
         header.appendChild(name);
-        
+
         const text = document.createElement('div');
         text.className = 'message-text';
         text.innerHTML = this.formatMessage(content);
-        
+
         contentWrapper.appendChild(header);
         contentWrapper.appendChild(text);
-        
+
         messageEl.appendChild(avatar);
         messageEl.appendChild(contentWrapper);
-        
+
         this.messagesContainer.appendChild(messageEl);
         this.scrollToBottom();
     }
@@ -175,25 +168,25 @@ class NihongoBot {
         const messageEl = document.createElement('div');
         messageEl.className = 'message bot';
         messageEl.id = id;
-        
+
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
         avatar.textContent = '🗾';
-        
+
         const contentWrapper = document.createElement('div');
         contentWrapper.className = 'message-content';
-        
+
         const indicator = document.createElement('div');
         indicator.className = 'typing-indicator';
         indicator.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-        
+
         contentWrapper.appendChild(indicator);
         messageEl.appendChild(avatar);
         messageEl.appendChild(contentWrapper);
-        
+
         this.messagesContainer.appendChild(messageEl);
         this.scrollToBottom();
-        
+
         return id;
     }
 
@@ -207,32 +200,32 @@ class NihongoBot {
     formatMessage(content) {
         // Basic markdown-like formatting
         let formatted = content;
-        
+
         // Headers
         formatted = formatted.replace(/^### (.*$)/gim, '<h3>$1</h3>');
         formatted = formatted.replace(/^## (.*$)/gim, '<h2>$1</h2>');
         formatted = formatted.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-        
+
         // Bold
         formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        
+
         // Code blocks
         formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-        
+
         // Inline code
         formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
-        
+
         // Lists
         formatted = formatted.replace(/^\* (.*$)/gim, '<li>$1</li>');
         formatted = formatted.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-        
+
         // Line breaks
         formatted = formatted.replace(/\n\n/g, '</p><p>');
         formatted = '<p>' + formatted + '</p>';
-        
+
         // Clean up empty paragraphs
         formatted = formatted.replace(/<p><\/p>/g, '');
-        
+
         return formatted;
     }
 
@@ -247,7 +240,7 @@ class NihongoBot {
     startNewChat() {
         this.currentChatId = null;
         this.messagesContainer.innerHTML = '';
-        
+
         // Show welcome screen
         const welcomeHTML = `
             <div class="welcome-screen" id="welcomeScreen">
@@ -292,10 +285,10 @@ class NihongoBot {
                 </div>
             </div>
         `;
-        
+
         this.messagesContainer.innerHTML = welcomeHTML;
         this.welcomeScreen = document.getElementById('welcomeScreen');
-        
+
         // Re-attach prompt chip listeners
         document.querySelectorAll('.prompt-chip').forEach(chip => {
             chip.addEventListener('click', (e) => {
@@ -310,7 +303,7 @@ class NihongoBot {
 
     renderChatHistory() {
         const sortedChats = Object.values(this.chats);
-        
+
         this.chatHistory.innerHTML = sortedChats.map(chat => `
             <div class="chat-history-item ${chat.id === this.currentChatId ? 'active' : ''}" 
                  data-chat-id="${chat.id}">
@@ -378,12 +371,12 @@ class NihongoBot {
             }
 
             const data = await response.json();
-            
+
             // Update chat_id if it was created by backend
             if (data.chat_id && !this.currentChatId) {
                 this.currentChatId = data.chat_id;
             }
-            
+
             return data.response;
         } catch (error) {
             console.error('API Error:', error);
@@ -391,7 +384,7 @@ class NihongoBot {
             return this.getFallbackResponse(userMessage);
         }
     }
-    
+
     // Fallback response when API is unavailable
     getFallbackResponse(userMessage) {
         const message = userMessage.toLowerCase();
@@ -403,7 +396,7 @@ class NihongoBot {
         }
 
         // Grammar explanations
-        if (message.includes('particle') || message.includes('は') || message.includes('が') || 
+        if (message.includes('particle') || message.includes('は') || message.includes('が') ||
             message.includes('を') || message.includes('に') || message.includes('grammar')) {
             return this.handleGrammar(userMessage, lang);
         }
@@ -414,7 +407,7 @@ class NihongoBot {
         }
 
         // Politeness/Formality
-        if (message.includes('polite') || message.includes('formal') || message.includes('です') || 
+        if (message.includes('polite') || message.includes('formal') || message.includes('です') ||
             message.includes('ます') || message.includes('keigo')) {
             return this.handlePoliteness(userMessage, lang);
         }
@@ -699,22 +692,22 @@ Want to learn a specific kanji? Just ask! 🎌`,
 
         return responses[lang] || responses.en;
     }
-    
+
     // Theme Management
     initTheme() {
         const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
-        
+
         const themeToggle = document.getElementById('themeToggle');
         if (themeToggle) {
             themeToggle.addEventListener('click', () => this.toggleTheme());
         }
     }
-    
+
     toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
+
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
     }
