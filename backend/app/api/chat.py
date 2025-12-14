@@ -1,17 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from app.db.database import get_db
-from app.db.models import Chat, Message
+from fastapi import APIRouter, HTTPException
 from app.schemas.schemas import (
     GenerateRequest,
     GenerateResponse,
     ChatResponse,
     ChatHistoryItem,
-    MessageResponse
+    MessageResponse,
 )
 from app.services.model_loader import model_loader
 from datetime import datetime
-from typing import List
+from typing import List, Dict, Any
 
 router = APIRouter()
 
@@ -25,6 +22,43 @@ SYSTEM_PROMPT = """You are a helpful Japanese learning assistant. You can:
 
 Always be helpful, clear, and supportive in your teaching."""
 
+
+# In-memory chat storage (no database required)
+_chats: Dict[str, Dict[str, Any]] = {}
+_next_chat_internal_id: int = 1
+
+
+def _create_chat(chat_id: str, title: str) -> Dict[str, Any]:
+    global _next_chat_internal_id
+    now = datetime.utcnow()
+    chat = {
+        "id": _next_chat_internal_id,
+        "chat_id": chat_id,
+        "title": title,
+        "created_at": now,
+        "updated_at": now,
+        "messages": [],  # List[{"role", "content", "timestamp"}]
+    }
+    _chats[chat_id] = chat
+    _next_chat_internal_id += 1
+    return chat
+
+
+def _get_chat(chat_id: str) -> Dict[str, Any] | None:
+    return _chats.get(chat_id)
+
+
+def _add_message(chat: Dict[str, Any], role: str, content: str) -> Dict[str, Any]:
+    now = datetime.utcnow()
+    message = {
+        "role": role,
+        "content": content,
+        "timestamp": now,
+    }
+    chat["messages"].append(message)
+    chat["updated_at"] = now
+    return message
+
 @router.get("/status")
 async def model_status():
     """Return current model/device status to verify GPU usage"""
@@ -37,98 +71,92 @@ async def model_status():
     }
 
 @router.post("/generate", response_model=GenerateResponse)
-async def generate_response(
-    request: GenerateRequest,
-    db: Session = Depends(get_db)
-):
-    """Generate a response to a user message"""
+async def generate_response(request: GenerateRequest):
+    """Generate a response to a user message (in-memory chat store)."""
     try:
         # Get or create chat
         chat_id = request.chat_id or str(datetime.now().timestamp())
-        chat = db.query(Chat).filter(Chat.chat_id == chat_id).first()
-        
+        chat = _get_chat(chat_id)
+
         if not chat:
-            # Create new chat
-            chat = Chat(
-                chat_id=chat_id,
-                title=request.message[:50] + ("..." if len(request.message) > 50 else "")
-            )
-            db.add(chat)
-            db.commit()
-            db.refresh(chat)
-        
+            title = request.message[:50] + ("..." if len(request.message) > 50 else "")
+            chat = _create_chat(chat_id=chat_id, title=title)
+
         # Save user message
-        user_message = Message(
-            chat_id=chat.id,
-            role="user",
-            content=request.message
-        )
-        db.add(user_message)
-        db.commit()
-        
-        # Build conversation context
-        recent_messages = db.query(Message).filter(
-            Message.chat_id == chat.id
-        ).order_by(Message.timestamp.desc()).limit(10).all()
-        
-        recent_messages.reverse()  # Chronological order
-        
+        _add_message(chat, role="user", content=request.message)
+
+        # Build conversation context (last 10 messages)
+        recent_messages = chat["messages"][-10:]
         conversation = f"{SYSTEM_PROMPT}\n\n"
         for msg in recent_messages:
-            role_label = "User" if msg.role == "user" else "Assistant"
-            conversation += f"{role_label}: {msg.content}\n"
-        
+            role_label = "User" if msg["role"] == "user" else "Assistant"
+            conversation += f"{role_label}: {msg['content']}\n"
+
         conversation += "Assistant:"
-        
-        # Generate response
+
+        # Generate response with the model
         bot_response = model_loader.generate(
             prompt=conversation,
             max_tokens=2048,
             temperature=0.7,
-            stop=["User:", "Human:", "\nUser", "\nHuman"]
+            stop=["User:", "Human:", "\nUser", "\nHuman"],
         )
-        
+
         # Save bot response
-        bot_message = Message(
-            chat_id=chat.id,
-            role="bot",
-            content=bot_response
-        )
-        db.add(bot_message)
-        
-        # Update chat timestamp
-        chat.updated_at = datetime.utcnow()
-        db.commit()
-        
-        return GenerateResponse(
-            response=bot_response,
-            chat_id=chat.chat_id
-        )
-        
+        _add_message(chat, role="bot", content=bot_response)
+
+        return GenerateResponse(response=bot_response, chat_id=chat_id)
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/history", response_model=List[ChatHistoryItem])
-async def get_chat_history(db: Session = Depends(get_db)):
-    """Get all chat history"""
-    chats = db.query(Chat).order_by(Chat.updated_at.desc()).all()
-    return chats
+async def get_chat_history():
+    """Get all chat history from in-memory store."""
+    chats_sorted = sorted(
+        _chats.values(), key=lambda c: c["updated_at"], reverse=True
+    )
+    return [
+        ChatHistoryItem(
+            id=chat["id"],
+            chat_id=chat["chat_id"],
+            title=chat["title"],
+            updated_at=chat["updated_at"],
+        )
+        for chat in chats_sorted
+    ]
+
 
 @router.get("/history/{chat_id}", response_model=ChatResponse)
-async def get_chat(chat_id: str, db: Session = Depends(get_db)):
-    """Get a specific chat with all messages"""
-    chat = db.query(Chat).filter(Chat.chat_id == chat_id).first()
+async def get_chat(chat_id: str):
+    """Get a specific chat with all messages from in-memory store."""
+    chat = _get_chat(chat_id)
     if not chat:
         raise HTTPException(status_code=404, detail="Chat not found")
-    return chat
+
+    return ChatResponse(
+        id=chat["id"],
+        chat_id=chat["chat_id"],
+        title=chat["title"],
+        created_at=chat["created_at"],
+        updated_at=chat["updated_at"],
+        messages=[
+            MessageResponse(
+                role=m["role"],
+                content=m["content"],
+                timestamp=m["timestamp"],
+            )
+            for m in chat["messages"]
+        ],
+    )
+
 
 @router.delete("/history/{chat_id}")
-async def delete_chat(chat_id: str, db: Session = Depends(get_db)):
-    """Delete a chat"""
-    chat = db.query(Chat).filter(Chat.chat_id == chat_id).first()
+async def delete_chat(chat_id: str):
+    """Delete a chat from in-memory store."""
+    chat = _get_chat(chat_id)
     if not chat:
         raise HTTPException(status_code=404, detail="Chat not found")
-    
-    db.delete(chat)
-    db.commit()
+
+    del _chats[chat_id]
     return {"message": "Chat deleted successfully"}

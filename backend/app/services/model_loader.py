@@ -1,7 +1,5 @@
 from llama_cpp import Llama
 from app.core.config import settings
-from app.db.database import SessionLocal
-from app.db.models import ModelConfig
 import os
 from typing import Optional
 import logging
@@ -161,61 +159,6 @@ class ModelLoader:
             "context_size": settings.MODEL_CONTEXT_SIZE,
             "device": device_mode,
         }
-    
-    def list_available_models(self) -> list:
-        """List all available models from database"""
-        db = SessionLocal()
-        try:
-            models = db.query(ModelConfig).all()
-            return [
-                {
-                    "id": model.id,
-                    "name": model.name,
-                    "model_path": model.model_path,
-                    "context_size": model.context_size,
-                    "is_active": model.is_active
-                }
-                for model in models
-            ]
-        finally:
-            db.close()
-    
-    def switch_model(self, model_id: int) -> dict:
-        """
-        Switch to a different model by database ID
-        
-        Args:
-            model_id: Database ID of the model to switch to
-        
-        Returns:
-            Information about the newly loaded model
-        """
-        db = SessionLocal()
-        try:
-            # Get model config from database
-            model_config = db.query(ModelConfig).filter(ModelConfig.id == model_id).first()
-            if not model_config:
-                raise ValueError(f"Model with ID {model_id} not found")
-            
-            # Load the new model
-            self.load_model(
-                model_config.model_path,
-                context_size=model_config.context_size
-            )
-            
-            # Update active status
-            db.query(ModelConfig).update({"is_active": False})
-            model_config.is_active = True
-            db.commit()
-            
-            return {
-                "id": model_config.id,
-                "name": model_config.name,
-                "model_path": model_config.model_path,
-                "is_active": True
-            }
-        finally:
-            db.close()
 
 # Global model loader instance
 model_loader = ModelLoader()
