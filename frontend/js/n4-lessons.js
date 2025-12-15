@@ -108,13 +108,19 @@ class N4LessonsPage {
         const difficulty = lesson.difficulty || 'intermediate';
         const estimatedTime = lesson.estimatedTime || '45 mins';
 
+        // Clean title to remove "Lesson X:" prefix and emoji code
+        let cleanTitle = lesson.title
+            .replace(/^(👋|📦|📍|⏰|🚃|🍜|🎁|🎨|❤️|🔢|📅|🎌|✍️|🔤|👂)\s*/u, '') // Remove emoji prefix first
+            .replace(/^Lesson\s+\-?\d+:\s*/i, '') // Remove "Lesson X:"
+            .replace(/^START:\s*/i, ''); // Remove "START:"
+
         return `
             <div class="lesson-card" data-lesson-id="${lesson.id}">
                 <div class="lesson-card-header">
                     <div class="lesson-emoji">${emoji}</div>
                     <div class="lesson-info">
                         <div class="lesson-number">${displayNumber}</div>
-                        <h3 class="lesson-title">${lesson.title}</h3>
+                        <h3 class="lesson-title">${cleanTitle}</h3>
                         <div class="lesson-meta">
                             <span class="lesson-difficulty">
                                 <span class="difficulty-badge difficulty-${difficulty}">${difficulty}</span>
@@ -139,12 +145,25 @@ class N4LessonsPage {
     renderGrammar(grammar) {
         if (!grammar || grammar.length === 0) return '';
 
+        const visibleItems = grammar.slice(0, 5);
+        const hiddenItems = grammar.slice(5);
+        const hasHidden = hiddenItems.length > 0;
+
         return `
             <div class="lesson-section">
                 <h4 class="lesson-section-title">📖 Grammar Points</h4>
                 <ul class="lesson-list">
-                    ${grammar.slice(0, 5).map(item => `<li>${item}</li>`).join('')}
-                    ${grammar.length > 5 ? `<li><em>+ ${grammar.length - 5} more...</em></li>` : ''}
+                    ${visibleItems.map(item => `<li>${item}</li>`).join('')}
+                    ${hasHidden ? `
+                        <div class="hidden-content" style="display: none;">
+                            ${hiddenItems.map(item => `<li>${item}</li>`).join('')}
+                        </div>
+                        <li class="show-more-container">
+                            <button class="show-more-btn" onclick="this.parentElement.previousElementSibling.style.display = this.parentElement.previousElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.parentElement.previousElementSibling.style.display === 'none' ? '+ ${hiddenItems.length} more...' : 'Show Less'">
+                                + ${hiddenItems.length} more...
+                            </button>
+                        </li>
+                    ` : ''}
                 </ul>
             </div>
         `;
@@ -153,12 +172,25 @@ class N4LessonsPage {
     renderVocabulary(vocabulary) {
         if (!vocabulary || vocabulary.length === 0) return '';
 
+        const visibleItems = vocabulary.slice(0, 6);
+        const hiddenItems = vocabulary.slice(6);
+        const hasHidden = hiddenItems.length > 0;
+
         return `
             <div class="lesson-section">
                 <h4 class="lesson-section-title">📝 Key Vocabulary</h4>
                 <ul class="lesson-list">
-                    ${vocabulary.slice(0, 6).map(item => `<li>${item}</li>`).join('')}
-                    ${vocabulary.length > 6 ? `<li><em>+ ${vocabulary.length - 6} more...</em></li>` : ''}
+                    ${visibleItems.map(item => `<li>${item}</li>`).join('')}
+                    ${hasHidden ? `
+                        <div class="hidden-content" style="display: none;">
+                            ${hiddenItems.map(item => `<li>${item}</li>`).join('')}
+                        </div>
+                        <li class="show-more-container">
+                            <button class="show-more-btn" onclick="this.parentElement.previousElementSibling.style.display = this.parentElement.previousElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.parentElement.previousElementSibling.style.display === 'none' ? '+ ${hiddenItems.length} more...' : 'Show Less'">
+                                + ${hiddenItems.length} more...
+                            </button>
+                        </li>
+                    ` : ''}
                 </ul>
             </div>
         `;

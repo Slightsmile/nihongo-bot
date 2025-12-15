@@ -90,10 +90,17 @@
 }
 
 .lesson-number {
+    display: inline-block;
+    width: fit-content;
     font-size: 0.85rem;
     color: var(--primary-color);
     font-weight: 600;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    background: var(--bg-secondary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 .lesson-title {
@@ -253,4 +260,35 @@
         flex-direction: column;
         gap: 0.5rem;
     }
+}
+
+/* Show More functionality */
+.show-more-container {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin-top: 0.5rem;
+}
+
+.show-more-container:before {
+    content: none !important;
+}
+
+.show-more-btn {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    /* Blue-500 equivalent */
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.show-more-btn:hover {
+    text-decoration: underline;
+}
+
+.hidden-content {
+    margin-top: 0;
 }
