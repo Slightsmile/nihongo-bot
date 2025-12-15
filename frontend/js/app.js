@@ -53,8 +53,43 @@ class NihongoBot {
             this.messageInput.style.height = this.messageInput.scrollHeight + 'px';
         });
 
+
         // Load chat history UI
         this.renderChatHistory();
+
+        // Check for lesson context (redirected from lessons page)
+        this.checkLessonContext();
+    }
+
+    checkLessonContext() {
+        const contextStr = localStorage.getItem('lessonContext');
+        if (!contextStr) return;
+
+        const context = JSON.parse(contextStr);
+        if (context.action === 'chat') {
+            // Clear context so it doesn't trigger again on reload
+            localStorage.removeItem('lessonContext');
+
+            // Find lesson data (assuming N4/N5 arrays are globally available from index.html scripts)
+            // We need to wait a tiny bit to ensure scripts might be loaded, or just assume they are since we are in `DOMContentLoaded`
+            let lesson = null;
+            if (context.level === 'N5' && typeof N5_LESSONS !== 'undefined') {
+                lesson = N5_LESSONS.find(l => l.id == context.lessonId);
+            } else if (context.level === 'N4' && typeof N4_LESSONS !== 'undefined') {
+                lesson = N4_LESSONS.find(l => l.id == context.lessonId);
+            }
+
+            if (lesson) {
+                this.startNewChat();
+                // We want to send a hidden system prompt or just a starting message
+                const startMessage = `I want to study ${context.level} Lesson: "${lesson.title}".\n\nTopics: ${lesson.topics}\n\nPlease help me practice this lesson.`;
+
+                // Simulate sending this message
+                this.messageInput.value = startMessage;
+                this.handleInput();
+                this.sendMessage();
+            }
+        }
     }
 
     handleInput() {

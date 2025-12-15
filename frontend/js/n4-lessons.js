@@ -138,6 +138,11 @@ class N4LessonsPage {
                 ${this.renderVocabulary(lesson.vocabulary)}
                 ${this.renderQuickTips(lesson.quickTips)}
                 ${this.renderFunFact(lesson.funFact)}
+
+                <div class="lesson-actions">
+                    <button class="action-btn chat-btn" onclick="startLessonChat(${lesson.id})">💬 Chat</button>
+                    <button class="action-btn test-btn" onclick="startLessonTest(${lesson.id})">📝 Test</button>
+                </div>
             </div>
         `;
     }
@@ -234,7 +239,27 @@ class N4LessonsPage {
     }
 }
 
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     new N4LessonsPage();
 });
+
+// Global functions for lesson actions
+window.startLessonChat = (lessonId) => {
+    localStorage.setItem('lessonContext', JSON.stringify({
+        action: 'chat',
+        lessonId: lessonId,
+        level: 'N4'
+    }));
+    window.location.href = 'index.html';
+};
+
+window.startLessonTest = (lessonId) => {
+    localStorage.setItem('lessonContext', JSON.stringify({
+        action: 'test',
+        lessonId: lessonId,
+        level: 'N4'
+    }));
+    window.location.href = 'quiz.html';
+};

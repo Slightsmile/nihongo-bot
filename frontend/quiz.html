@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Quiz - NihongoBot</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/lessons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-progress {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-btn {
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .option-btn.correct {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .option-btn.wrong {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .feedback-area {
+            min-height: 60px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-area.visible {
+            display: block;
+        }
+
+        .feedback-correct {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .feedback-wrong {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .next-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+        }
+
+        .next-btn:hover {
+            opacity: 0.9;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 4rem;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--bg-secondary);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .results-view {
+            text-align: center;
+            display: none;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.8rem 2rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar (Simplified/Collapsed or same as main) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📝</span>
+                    <span class="logo-text">Quiz Mode</span>
+                </div>
+            </div>
+            <div class="sidebar-content">
+                <!-- Navigation -->
+                <button class="new-chat-btn" onclick="window.location.href='index.html'" style="margin-top: 1rem;">
+                    Back to Chat
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="quiz-container">
+                <div id="loadingState" class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <h2>Generating your quiz...</h2>
+                    <p>Analyzing lesson content and creating questions.</p>
+                </div>
+
+                <div id="quizView" class="quiz-card" style="display: none;">
+                    <div class="quiz-header">
+                        <div class="quiz-progress">Question <span id="currentQ">1</span> / <span id="totalQ">10</span>
+                        </div>
+                        <h2 id="lessonTitle">Lesson Title</h2>
+                    </div>
+
+                    <div id="questionText" class="question-text">Question goes here...</div>
+
+                    <div id="optionsGrid" class="options-grid">
+                        <!-- Options injected here -->
+                    </div>
+
+                    <div id="feedbackArea" class="feedback-area">
+                        <!-- Feedback text -->
+                    </div>
+
+                    <button id="nextBtn" class="next-btn">Next Question</button>
+                </div>
+
+                <div id="resultsView" class="results-view" style="display: none;">
+                    <h2>Quiz Complete! 🎉</h2>
+                    <div class="score-display"><span id="finalScore">0</span> / 10</div>
+                    <p id="resultMessage">Great job!</p>
+                    <a href="#" id="backToLessonBtn" class="back-btn">Back to Lessons</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/n5-lessons-data.js"></script>
+    <script src="js/n4-lessons-data.js"></script>
+    <script src="js/quiz.js"></script>
+</body>
+
+</html>

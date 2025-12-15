@@ -25,6 +25,7 @@ INDEX_HTML = os.path.join(FRONTEND_DIR, "index.html")
 KNOWLEDGE_HUB_HTML = os.path.join(FRONTEND_DIR, "knowledge-hub.html")
 N4_LESSONS_HTML = os.path.join(FRONTEND_DIR, "n4-lessons.html")
 N5_LESSONS_HTML = os.path.join(FRONTEND_DIR, "n5-lessons.html")
+QUIZ_HTML = os.path.join(FRONTEND_DIR, "quiz.html")
 
 # Mount frontend asset folders for direct paths in index.html
 if os.path.isdir(CSS_DIR):
@@ -72,6 +73,11 @@ async def n4_lessons():
 @app.get("/n5-lessons.html", include_in_schema=False)
 async def n5_lessons():
     return FileResponse(N5_LESSONS_HTML)
+
+@app.get("/quiz", include_in_schema=False)
+@app.get("/quiz.html", include_in_schema=False)
+async def quiz_page():
+    return FileResponse(QUIZ_HTML)
 
 @app.get("/health")
 async def health_check():
